@@ -1,0 +1,29 @@
+{
+  "name": "Cajun Red Beans & Rice",
+  "description": "A flavorful, heart-healthy, egg-free, toddler-friendly Cajun classic — designed for batch cooking and big flavor without too much heat.",
+  "recipeIngredient": [
+    "1.5 cups rice",
+    "3 bacon slices, chopped",
+    "12 ounces smoked sausage, sliced into half-moons",
+    "2 cans red kidney beans, drained and rinsed",
+    "1 tablespoon olive oil",
+    "1 small onion, diced",
+    "1 green bell pepper, diced",
+    "2 garlic cloves, minced",
+    "2 teaspoons Cajun seasoning, low sodium",
+    "1 teaspoon smoked paprika (optional)",
+    "0.25 teaspoon black pepper",
+    "2 cups low-sodium chicken broth",
+    "Parsley for garnish"
+  ],
+  "recipeInstructions": [
+    "Cook the rice.",
+    "Cook the bacon in a dutch oven until cooked but not crispy.",
+    "Cook the veggies and sausage: In a large pot or Dutch oven, heat 1 tablespoon olive oil over medium heat. Add 1 small onion, diced, 1 green bell pepper, diced. Sauté 5–7 minutes until soft. Add 2 garlic cloves, minced and cook 1 minute more. Stir in sliced sausage and cook until lightly browned, about 3–4 minutes.",
+    "Simmer the beans: Add 2 teaspoons Cajun seasoning, 0.5 teaspoons dried thyme, 1 teaspoon smoked paprika, 0.25 teaspoons black pepper, and 1 tablespoon tomato paste. Stir well. Add 2 cans red kidney beans, drained and rinsed, 2 cups low-sodium chicken broth, and 1 teaspoon soy sauce. Bring to a simmer. Reduce heat, cover partially, and let simmer 20–25 minutes, stirring occasionally. If too watery, remove lid and simmer uncovered last 5–10 min until thickened.",
+    "Serve: Spoon bean mixture over cooked rice. Garnish with green onions or parsley if you like."
+  ],
+  "recipeCuisine": "Cajun",
+  "recipeCategory": "Main course",
+  "keywords": ["red beans and rice", "cajun", "batch cooking", "toddler-friendly"]
+}

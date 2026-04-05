@@ -17,9 +17,9 @@ import (
 func main() {
 	baseURL := envOr("MEALIE_BASE", "https://mealie.home.poyarzun.io")
 	token := requireEnv("MEALIE_TOKEN")
-	jsonDir := "json"
+	target := "json"
 	if len(os.Args) > 1 {
-		jsonDir = os.Args[1]
+		target = os.Args[1]
 	}
 
 	client, err := mealie.NewClient(baseURL, mealie.WithRequestEditorFn(bearerAuth(token)))
@@ -28,20 +28,31 @@ func main() {
 		os.Exit(1)
 	}
 
-	entries, err := os.ReadDir(jsonDir)
+	var files []string
+	info, err := os.Stat(target)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: directory %q: %v\n", jsonDir, err)
+		fmt.Fprintf(os.Stderr, "Error: %v\n", err)
 		os.Exit(1)
 	}
-
-	var files []string
-	for _, e := range entries {
-		if !e.IsDir() && strings.HasSuffix(e.Name(), ".json") {
-			files = append(files, filepath.Join(jsonDir, e.Name()))
+	if info.IsDir() {
+		entries, err := os.ReadDir(target)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error: directory %q: %v\n", target, err)
+			os.Exit(1)
 		}
+		for _, e := range entries {
+			if !e.IsDir() && strings.HasSuffix(e.Name(), ".json") {
+				files = append(files, filepath.Join(target, e.Name()))
+			}
+		}
+	} else if strings.HasSuffix(target, ".json") {
+		files = append(files, target)
+	} else {
+		fmt.Fprintf(os.Stderr, "Error: %s is not a .json file or directory\n", target)
+		os.Exit(1)
 	}
 	if len(files) == 0 {
-		fmt.Printf("No .json files found in %s\n", jsonDir)
+		fmt.Printf("No .json files found in %s\n", target)
 		return
 	}
 

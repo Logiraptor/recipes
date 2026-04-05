@@ -1,0 +1,26 @@
+{
+  "name": "Southern Buttermilk Biscuits",
+  "description": "Authentic Southern buttermilk biscuits — light, tender, and golden brown, handed down through generations.",
+  "recipeCategory": "Breads",
+  "recipeCuisine": "Southern",
+  "recipeYield": "10 biscuits",
+  "totalTime": "PT22M",
+  "cookTime": "PT12M",
+  "recipeIngredient": [
+    "2 cups unbleached all-purpose flour, plus more for dusting",
+    "0.25 teaspoon baking soda",
+    "1 tablespoon baking powder",
+    "1 teaspoon kosher salt",
+    "6 tablespoons unsalted butter, very cold",
+    "1 cup buttermilk"
+  ],
+  "recipeInstructions": [
+    "Preheat oven: Preheat your oven to 450°F.",
+    "Combine dry ingredients: Combine flour, baking soda, baking powder, and salt in a bowl or food processor.",
+    "Cut in butter: Cut butter into chunks and cut into the flour until it resembles coarse meal. If using a food processor, pulse a few times until this consistency is achieved.",
+    "Add buttermilk: Add buttermilk and mix just until combined. If the dough appears dry, add a bit more buttermilk. It should be very wet.",
+    "Shape the dough: Turn the dough out onto a floured board. Gently pat (do not roll with a rolling pin) the dough out until about 1/2 inch thick. Fold the dough about 5 times, then gently press down to 1 inch thick.",
+    "Cut biscuits: Use a round cutter to cut into rounds. Gently knead scraps together for a few more, but these won't be as good as the first ones.",
+    "Bake: Place biscuits on a cookie sheet — touching each other for soft sides, or about 1 inch apart for crusty sides. Bake for 10–12 minutes until light golden brown on top and bottom. Do not overbake."
+  ]
+}
