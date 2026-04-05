@@ -154,6 +154,10 @@ func findRecipe(cfg config, name string) (slug string, exists bool, err error) {
 		return "", false, err
 	}
 
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return "", false, fmt.Errorf("search HTTP %d: %s", resp.StatusCode, truncate(body, 200))
+	}
+
 	var result searchResponse
 	if err := json.Unmarshal(body, &result); err != nil {
 		return "", false, fmt.Errorf("parse search response: %w", err)
@@ -180,6 +184,7 @@ func createRecipe(cfg config, path string) error {
 
 	recipe["@context"] = "https://schema.org"
 	recipe["@type"] = "Recipe"
+	normalizeRecipe(recipe)
 
 	recipeJSON, err := json.Marshal(recipe)
 	if err != nil {
@@ -243,8 +248,12 @@ func patchIngredients(cfg config, path string, slug string) error {
 		return err
 	}
 
+	patch := map[string]any{
+		"recipeIngredient": recipe["recipeIngredient"],
+	}
+
 	patchURL := cfg.baseURL + "/api/recipes/" + url.PathEscape(slug)
-	body, err := json.Marshal(recipe)
+	body, err := json.Marshal(patch)
 	if err != nil {
 		return err
 	}
@@ -312,6 +321,29 @@ func parseIngredients(cfg config, ingredients []string) ([]json.RawMessage, erro
 	return parsed, nil
 }
 
+func normalizeRecipe(recipe map[string]any) {
+	if cat, ok := recipe["recipeCategory"]; ok {
+		if s, ok := cat.(string); ok {
+			recipe["recipeCategory"] = []string{s}
+		}
+	}
+
+	if instRaw, ok := recipe["recipeInstructions"]; ok {
+		if arr, ok := instRaw.([]any); ok {
+			normalized := make([]any, len(arr))
+			for i, v := range arr {
+				switch v := v.(type) {
+				case string:
+					normalized[i] = map[string]string{"text": v}
+				default:
+					normalized[i] = v
+				}
+			}
+			recipe["recipeInstructions"] = normalized
+		}
+	}
+}
+
 func resolveIngredients(cfg config, recipe map[string]any) error {
 	raw, ok := recipe["recipeIngredient"]
 	if !ok {
@@ -323,30 +355,57 @@ func resolveIngredients(cfg config, recipe map[string]any) error {
 		return nil
 	}
 
-	var strings []string
+	var strs []string
 	for _, v := range arr {
 		s, ok := v.(string)
 		if !ok {
 			return nil
 		}
-		strings = append(strings, s)
+		strs = append(strs, s)
 	}
 
-	parsed, err := parseIngredients(cfg, strings)
+	parsed, err := parseIngredients(cfg, strs)
 	if err != nil {
 		return fmt.Errorf("ingredient parsing: %w", err)
 	}
 
 	resolved := make([]any, len(parsed))
 	for i, p := range parsed {
-		var obj any
+		var obj map[string]any
 		if err := json.Unmarshal(p, &obj); err != nil {
 			return err
 		}
+		dropSubObjectsWithoutID(obj, "food")
+		dropSubObjectsWithoutID(obj, "unit")
 		resolved[i] = obj
 	}
 	recipe["recipeIngredient"] = resolved
 	return nil
+}
+
+// Mealie's PATCH endpoint requires food/unit objects to carry a UUID id;
+// the NLP parser often returns them with id: null, which triggers a 500.
+func dropSubObjectsWithoutID(m map[string]any, key string) {
+	v, ok := m[key]
+	if !ok || v == nil {
+		delete(m, key)
+		return
+	}
+	obj, ok := v.(map[string]any)
+	if !ok {
+		return
+	}
+	id, hasID := obj["id"]
+	if !hasID || id == nil {
+		delete(m, key)
+	}
+}
+
+func truncate(b []byte, n int) string {
+	if len(b) <= n {
+		return string(b)
+	}
+	return string(b[:n]) + "..."
 }
 
 func envOr(key, fallback string) string {
