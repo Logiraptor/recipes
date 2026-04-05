@@ -2,72 +2,50 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/patrickoyarzun/recipes/mealie"
 )
 
-type config struct {
-	baseURL string
-	token   string
-	jsonDir string
-}
-
-type recipeSummary struct {
-	Name string `json:"name"`
-	Slug string `json:"slug"`
-}
-
-type searchResponse struct {
-	Items []recipeSummary `json:"items"`
-}
-
-type scrapePayload struct {
-	IncludeTags bool   `json:"includeTags"`
-	Data        string `json:"data"`
-}
-
-type parseRequest struct {
-	Parser      string   `json:"parser"`
-	Ingredients []string `json:"ingredients"`
-}
-
-type parsedIngredientResult struct {
-	Ingredient json.RawMessage `json:"ingredient"`
-}
-
 func main() {
-	cfg := config{
-		baseURL: envOr("MEALIE_BASE", "https://mealie.home.poyarzun.io"),
-		token:   requireEnv("MEALIE_TOKEN"),
-		jsonDir: "json",
-	}
+	baseURL := envOr("MEALIE_BASE", "https://mealie.home.poyarzun.io")
+	token := requireEnv("MEALIE_TOKEN")
+	jsonDir := "json"
 	if len(os.Args) > 1 {
-		cfg.jsonDir = os.Args[1]
+		jsonDir = os.Args[1]
 	}
 
-	entries, err := os.ReadDir(cfg.jsonDir)
+	client, err := mealie.NewClient(baseURL, mealie.WithRequestEditorFn(bearerAuth(token)))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error: directory %q: %v\n", cfg.jsonDir, err)
+		fmt.Fprintf(os.Stderr, "Error: creating client: %v\n", err)
+		os.Exit(1)
+	}
+
+	entries, err := os.ReadDir(jsonDir)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error: directory %q: %v\n", jsonDir, err)
 		os.Exit(1)
 	}
 
 	var files []string
 	for _, e := range entries {
 		if !e.IsDir() && strings.HasSuffix(e.Name(), ".json") {
-			files = append(files, filepath.Join(cfg.jsonDir, e.Name()))
+			files = append(files, filepath.Join(jsonDir, e.Name()))
 		}
 	}
 	if len(files) == 0 {
-		fmt.Printf("No .json files found in %s\n", cfg.jsonDir)
+		fmt.Printf("No .json files found in %s\n", jsonDir)
 		return
 	}
 
+	ctx := context.Background()
 	var created, updated, failed int
 	for _, f := range files {
 		name, err := recipeName(f)
@@ -77,7 +55,7 @@ func main() {
 			continue
 		}
 
-		slug, exists, err := findRecipe(cfg, name)
+		slug, exists, err := findRecipe(ctx, client, name)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "FAIL %s — search error: %v\n", f, err)
 			failed++
@@ -85,7 +63,7 @@ func main() {
 		}
 
 		if exists {
-			if err := updateRecipe(cfg, f, slug); err != nil {
+			if err := updateRecipe(ctx, client, f, slug); err != nil {
 				fmt.Fprintf(os.Stderr, "FAIL %s — update error: %v\n", f, err)
 				failed++
 			} else {
@@ -93,7 +71,7 @@ func main() {
 				updated++
 			}
 		} else {
-			if err := createRecipe(cfg, f); err != nil {
+			if err := createRecipe(ctx, client, f); err != nil {
 				fmt.Fprintf(os.Stderr, "FAIL %s — create error: %v\n", f, err)
 				failed++
 			} else {
@@ -107,6 +85,13 @@ func main() {
 		created, updated, failed, len(files))
 	if failed > 0 {
 		os.Exit(1)
+	}
+}
+
+func bearerAuth(token string) mealie.RequestEditorFn {
+	return func(_ context.Context, req *http.Request) error {
+		req.Header.Set("Authorization", "Bearer "+token)
+		return nil
 	}
 }
 
@@ -127,23 +112,14 @@ func recipeName(path string) (string, error) {
 	return obj.Name, nil
 }
 
-func findRecipe(cfg config, name string) (slug string, exists bool, err error) {
-	u, err := url.Parse(cfg.baseURL + "/api/recipes")
-	if err != nil {
-		return "", false, err
+func findRecipe(ctx context.Context, client *mealie.Client, name string) (slug string, exists bool, err error) {
+	perPage := 50
+	params := &mealie.GetAllApiRecipesGetParams{
+		Search:  &name,
+		PerPage: &perPage,
 	}
-	q := u.Query()
-	q.Set("search", name)
-	q.Set("perPage", "50")
-	u.RawQuery = q.Encode()
 
-	req, err := http.NewRequest(http.MethodGet, u.String(), nil)
-	if err != nil {
-		return "", false, err
-	}
-	req.Header.Set("Authorization", "Bearer "+cfg.token)
-
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := client.GetAllApiRecipesGet(ctx, params)
 	if err != nil {
 		return "", false, err
 	}
@@ -153,25 +129,26 @@ func findRecipe(cfg config, name string) (slug string, exists bool, err error) {
 	if err != nil {
 		return "", false, err
 	}
-
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return "", false, fmt.Errorf("search HTTP %d: %s", resp.StatusCode, truncate(body, 200))
 	}
 
-	var result searchResponse
+	var result mealie.PaginationBaseRecipeSummary
 	if err := json.Unmarshal(body, &result); err != nil {
 		return "", false, fmt.Errorf("parse search response: %w", err)
 	}
 
 	for _, item := range result.Items {
-		if item.Name == name {
-			return item.Slug, true, nil
+		if item.Name != nil && *item.Name == name {
+			if item.Slug != nil {
+				return *item.Slug, true, nil
+			}
 		}
 	}
 	return "", false, nil
 }
 
-func createRecipe(cfg config, path string) error {
+func createRecipe(ctx context.Context, client *mealie.Client, path string) error {
 	raw, err := os.ReadFile(path)
 	if err != nil {
 		return err
@@ -191,23 +168,11 @@ func createRecipe(cfg config, path string) error {
 		return err
 	}
 
-	payload := scrapePayload{
-		IncludeTags: false,
-		Data:        string(recipeJSON),
-	}
-	body, err := json.Marshal(payload)
-	if err != nil {
-		return err
+	body := mealie.ScrapeRecipeData{
+		Data: string(recipeJSON),
 	}
 
-	req, err := http.NewRequest(http.MethodPost, cfg.baseURL+"/api/recipes/create/html-or-json", bytes.NewReader(body))
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Authorization", "Bearer "+cfg.token)
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := client.CreateRecipeFromHtmlOrJsonApiRecipesCreateHtmlOrJsonPost(ctx, nil, body)
 	if err != nil {
 		return err
 	}
@@ -223,17 +188,17 @@ func createRecipe(cfg config, path string) error {
 		return fmt.Errorf("parse create response: %w", err)
 	}
 
-	if err := patchIngredients(cfg, path, slug); err != nil {
+	if err := patchIngredients(ctx, client, path, slug); err != nil {
 		return fmt.Errorf("ingredient patch: %w", err)
 	}
 	return nil
 }
 
-func updateRecipe(cfg config, path string, slug string) error {
-	return patchIngredients(cfg, path, slug)
+func updateRecipe(ctx context.Context, client *mealie.Client, path string, slug string) error {
+	return patchIngredients(ctx, client, path, slug)
 }
 
-func patchIngredients(cfg config, path string, slug string) error {
+func patchIngredients(ctx context.Context, client *mealie.Client, path string, slug string) error {
 	raw, err := os.ReadFile(path)
 	if err != nil {
 		return err
@@ -244,28 +209,23 @@ func patchIngredients(cfg config, path string, slug string) error {
 		return err
 	}
 
-	if err := resolveIngredients(cfg, recipe); err != nil {
+	ingredients, err := resolveIngredients(ctx, client, recipe)
+	if err != nil {
 		return err
+	}
+	if ingredients == nil {
+		return nil
 	}
 
 	patch := map[string]any{
-		"recipeIngredient": recipe["recipeIngredient"],
+		"recipeIngredient": ingredients,
 	}
-
-	patchURL := cfg.baseURL + "/api/recipes/" + url.PathEscape(slug)
-	body, err := json.Marshal(patch)
+	patchBody, err := json.Marshal(patch)
 	if err != nil {
 		return err
 	}
 
-	req, err := http.NewRequest(http.MethodPatch, patchURL, bytes.NewReader(body))
-	if err != nil {
-		return err
-	}
-	req.Header.Set("Authorization", "Bearer "+cfg.token)
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := client.PatchOneApiRecipesSlugPatchWithBody(ctx, slug, nil, "application/json", bytes.NewReader(patchBody))
 	if err != nil {
 		return err
 	}
@@ -278,24 +238,14 @@ func patchIngredients(cfg config, path string, slug string) error {
 	return nil
 }
 
-func parseIngredients(cfg config, ingredients []string) ([]json.RawMessage, error) {
-	payload := parseRequest{
-		Parser:      "nlp",
+func parseIngredients(ctx context.Context, client *mealie.Client, ingredients []string) ([]mealie.ParsedIngredient, error) {
+	parser := mealie.Nlp
+	body := mealie.IngredientsRequest{
+		Parser:      &parser,
 		Ingredients: ingredients,
 	}
-	body, err := json.Marshal(payload)
-	if err != nil {
-		return nil, err
-	}
 
-	req, err := http.NewRequest(http.MethodPost, cfg.baseURL+"/api/parser/ingredients", bytes.NewReader(body))
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Authorization", "Bearer "+cfg.token)
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := http.DefaultClient.Do(req)
+	resp, err := client.ParseIngredientsApiParserIngredientsPost(ctx, nil, body)
 	if err != nil {
 		return nil, err
 	}
@@ -309,16 +259,11 @@ func parseIngredients(cfg config, ingredients []string) ([]json.RawMessage, erro
 		return nil, fmt.Errorf("parser HTTP %d: %s", resp.StatusCode, string(respBody))
 	}
 
-	var results []parsedIngredientResult
+	var results []mealie.ParsedIngredient
 	if err := json.Unmarshal(respBody, &results); err != nil {
 		return nil, fmt.Errorf("parse parser response: %w", err)
 	}
-
-	parsed := make([]json.RawMessage, len(results))
-	for i, r := range results {
-		parsed[i] = r.Ingredient
-	}
-	return parsed, nil
+	return results, nil
 }
 
 func normalizeRecipe(recipe map[string]any) {
@@ -344,61 +289,68 @@ func normalizeRecipe(recipe map[string]any) {
 	}
 }
 
-func resolveIngredients(cfg config, recipe map[string]any) error {
+// resolveIngredients parses raw ingredient strings via the Mealie NLP parser
+// and returns structured ingredient objects ready for PATCH. Returns nil if
+// the recipe has no string ingredients to resolve.
+func resolveIngredients(ctx context.Context, client *mealie.Client, recipe map[string]any) ([]mealie.RecipeIngredientInput, error) {
 	raw, ok := recipe["recipeIngredient"]
 	if !ok {
-		return nil
+		return nil, nil
 	}
 
 	arr, ok := raw.([]any)
 	if !ok || len(arr) == 0 {
-		return nil
+		return nil, nil
 	}
 
 	var strs []string
 	for _, v := range arr {
 		s, ok := v.(string)
 		if !ok {
-			return nil
+			return nil, nil
 		}
 		strs = append(strs, s)
 	}
 
-	parsed, err := parseIngredients(cfg, strs)
+	parsed, err := parseIngredients(ctx, client, strs)
 	if err != nil {
-		return fmt.Errorf("ingredient parsing: %w", err)
+		return nil, fmt.Errorf("ingredient parsing: %w", err)
 	}
 
-	resolved := make([]any, len(parsed))
+	resolved := make([]mealie.RecipeIngredientInput, len(parsed))
 	for i, p := range parsed {
-		var obj map[string]any
-		if err := json.Unmarshal(p, &obj); err != nil {
-			return err
-		}
-		dropSubObjectsWithoutID(obj, "food")
-		dropSubObjectsWithoutID(obj, "unit")
-		resolved[i] = obj
+		resolved[i] = toIngredientInput(p.Ingredient)
 	}
-	recipe["recipeIngredient"] = resolved
-	return nil
+	return resolved, nil
 }
 
-// Mealie's PATCH endpoint requires food/unit objects to carry a UUID id;
-// the NLP parser often returns them with id: null, which triggers a 500.
-func dropSubObjectsWithoutID(m map[string]any, key string) {
-	v, ok := m[key]
-	if !ok || v == nil {
-		delete(m, key)
-		return
+// toIngredientInput converts a parser output ingredient to an input ingredient,
+// dropping food/unit sub-objects that lack a valid ID (the NLP parser often
+// returns them with empty IDs, which causes Mealie's PATCH to 500).
+func toIngredientInput(out mealie.RecipeIngredientOutput) mealie.RecipeIngredientInput {
+	inp := mealie.RecipeIngredientInput{
+		Display:      out.Display,
+		Note:         out.Note,
+		OriginalText: out.OriginalText,
+		Quantity:     out.Quantity,
+		ReferenceId:  out.ReferenceId,
+		Title:        out.Title,
 	}
-	obj, ok := v.(map[string]any)
-	if !ok {
-		return
+	if out.Food != nil && out.Food.Id != "" {
+		inp.Food = &mealie.IngredientFoodInput{
+			Id:   out.Food.Id,
+			Name: out.Food.Name,
+		}
+	} else if out.Food != nil && out.Food.Name != "" {
+		inp.Note = &out.Food.Name
 	}
-	id, hasID := obj["id"]
-	if !hasID || id == nil {
-		delete(m, key)
+	if out.Unit != nil && out.Unit.Id != "" {
+		inp.Unit = &mealie.IngredientUnitInput{
+			Id:   out.Unit.Id,
+			Name: out.Unit.Name,
+		}
 	}
+	return inp
 }
 
 func truncate(b []byte, n int) string {

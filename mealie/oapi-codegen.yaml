@@ -1,0 +1,7 @@
+package: mealie
+output: client.gen.go
+generate:
+  models: true
+  client: true
+output-options:
+  client-type-name: Client
