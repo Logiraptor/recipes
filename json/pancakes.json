@@ -1,0 +1,29 @@
+{
+  "name": "Pancakes",
+  "description": "Classic, fluffy pancakes with easy steps using simple ingredients.",
+  "recipeYield": "8 pancakes",
+  "recipeIngredient": [
+    "1 ½ cups all-purpose flour",
+    "1 tablespoon sugar",
+    "3 ½ teaspoons baking powder",
+    "½ teaspoon salt",
+    "1 ¼ cups milk",
+    "1 large egg",
+    "3 tablespoons melted butter",
+    "2 teaspoons vanilla extract (optional)"
+  ],
+  "recipeInstructions": [
+    "In a large bowl, whisk together flour, sugar, baking powder, and salt.",
+    "In a separate bowl, whisk together milk, egg, melted butter, and vanilla (if using).",
+    "Pour the wet ingredients into the dry ingredients and mix until just combined; lumps are ok—do not overmix.",
+    "Heat a nonstick skillet or griddle over medium to medium-high heat. Lightly grease with butter or oil.",
+    "Scoop about ¼ cup of batter per pancake onto the skillet. Cook until you see bubbles form and the edges look set, 1-2 minutes, then flip and cook until golden, another 1-2 minutes.",
+    "Serve warm with syrup, butter, or your favorite toppings."
+  ],
+  "nutrition": {
+    "@type": "NutritionInformation",
+    "calories": "158 calories",
+    "carbohydrateContent": "22 g",
+    "proteinContent": "5 g"
+  }
+}

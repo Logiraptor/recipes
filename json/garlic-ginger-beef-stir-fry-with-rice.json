@@ -1,0 +1,29 @@
+{
+  "name": "Garlic Ginger Beef Stir Fry with Rice",
+  "description": "A quick, high-protein weeknight stir fry with garlic, ginger, and a savory sauce — on the table in under 25 minutes.",
+  "recipeCategory": "Dinner",
+  "recipeCuisine": "Asian",
+  "totalTime": "PT25M",
+  "recipeIngredient": [
+    "1.5 pounds flank steak or sirloin, thinly sliced",
+    "2 cups broccoli florets",
+    "1 red bell pepper, sliced",
+    "1 carrot, thinly sliced",
+    "4 garlic cloves, minced",
+    "1 tablespoons fresh ginger, grated",
+    "3 tablespoons vegetable oil, divided",
+    "3 tablespoons low-sodium soy sauce",
+    "1 tablespoons oyster sauce",
+    "1 teaspoons sesame oil",
+    "1 teaspoons cornstarch",
+    "0.3 cups water",
+    "2 cups long-grain white rice"
+  ],
+  "recipeInstructions": [
+    "Make sauce and cook rice: Whisk together 3 tablespoons low-sodium soy sauce, 1 tablespoons oyster sauce, 1 teaspoons sesame oil, 1 teaspoons cornstarch, and 0.3 cups water in a small bowl. Set aside. Cook 2 cups long-grain white rice according to package directions.",
+    "Sear the beef: Heat 2 tablespoons of the vegetable oil in a large skillet or wok over very high heat. Add 1.5 pounds flank steak or sirloin, thinly sliced in a single layer. Sear without moving for 1–2 min, then stir-fry another 1–2 min until browned. Remove and set aside.",
+    "Stir-fry the vegetables: Add the remaining 1 tablespoon vegetable oil to the pan. Add 1 carrot, thinly sliced first, stir-fry 1 min. Add 2 cups broccoli florets and 1 red bell pepper, sliced, stir-fry 2–3 min until tender-crisp. Add 4 garlic cloves, minced and 1 tablespoons fresh ginger, grated, cook 30 seconds until fragrant.",
+    "Combine and finish: Return beef to the pan. Pour sauce over everything and toss to coat. Cook 1–2 min until sauce thickens and coats everything evenly.",
+    "Serve: Serve immediately over rice."
+  ]
+}
