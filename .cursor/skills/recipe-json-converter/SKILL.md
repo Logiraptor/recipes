@@ -76,9 +76,12 @@ Add other `schema.org/Recipe` fields only when they are explicit or strongly sup
   - Keep it concise and human-readable.
 
 - `recipeIngredient`
-  - Prefer an array of ingredient strings.
+  - Prefer an array of natural-language ingredient strings.
   - Strip bullets and surrounding whitespace.
-  - Preserve quantities, units, and ingredient wording from the source unless there is an obvious formatting mistake.
+  - Each string should read naturally, e.g. `"6 large eggs"`, `"2 tablespoons butter"`, `"4 slices whole wheat bread"`.
+  - Use standard cooking units when present (cup, tablespoon, teaspoon, pound, ounce, etc.).
+  - Do not use "pieces" as a unit — write `"6 large eggs"` not `"6 pieces large eggs"`. If the original says "pieces", drop it and write the quantity directly before the food.
+  - Preserve quantities, units, and ingredient wording from the source unless there is an obvious formatting mistake or unnatural phrasing (like "pieces" used as a unit for countable items).
 
 - `recipeInstructions`
   - Prefer an array of step strings.
@@ -106,6 +109,17 @@ Add other `schema.org/Recipe` fields only when they are explicit or strongly sup
 - Preserve ingredient text if structured parsing would lose meaning.
 - If a section is unlabeled, infer it only when the format is obvious.
 - If the file contains notes, keep them out of the main JSON unless they clearly map to a schema field.
+
+### Ingredient Normalization
+
+Ingredient strings are later parsed by Mealie's NLP ingredient parser, which expects natural-language strings in the form `"<quantity> <unit> <food>, <note>"`. Write ingredients so the parser can extract quantity, unit, and food correctly:
+
+- Use recognized unit names: teaspoon, tablespoon, cup, ounce, pound, gram, kilogram, liter, milliliter, fluid ounce, pint, quart, gallon, pinch, dash, splash, can, bunch, clove, head, serving, sprig, pack.
+- For countable items with no measurement unit (eggs, sausage links, bread slices), omit any unit — just write the quantity followed by the food: `"6 large eggs"`, `"4 andouille sausage links"`, `"2 green onions, sliced"`.
+- Never use "pieces" as a unit. Drop it entirely.
+- Use decimal quantities (`0.5`, `1.5`) or fractions (`1/2`, `1 1/2`) — both are acceptable.
+- Put preparation notes and qualifiers after the food, separated by a comma: `"1 pound dried red kidney beans, soaked overnight"`.
+- Put parenthetical alternatives at the end: `"1 pound dried red kidney beans (or 2 cans, drained)"`.
 
 ## Timing Rules
 

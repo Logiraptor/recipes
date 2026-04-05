@@ -32,6 +32,15 @@ type scrapePayload struct {
 	Data        string `json:"data"`
 }
 
+type parseRequest struct {
+	Parser      string   `json:"parser"`
+	Ingredients []string `json:"ingredients"`
+}
+
+type parsedIngredientResult struct {
+	Ingredient json.RawMessage `json:"ingredient"`
+}
+
 func main() {
 	cfg := config{
 		baseURL: envOr("MEALIE_BASE", "https://mealie.home.poyarzun.io"),
@@ -168,6 +177,7 @@ func createRecipe(cfg config, path string) error {
 	if err := json.Unmarshal(raw, &recipe); err != nil {
 		return err
 	}
+
 	recipe["@context"] = "https://schema.org"
 	recipe["@type"] = "Recipe"
 
@@ -198,14 +208,27 @@ func createRecipe(cfg config, path string) error {
 	}
 	defer resp.Body.Close()
 
+	respBody, _ := io.ReadAll(resp.Body)
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		respBody, _ := io.ReadAll(resp.Body)
 		return fmt.Errorf("HTTP %d: %s", resp.StatusCode, string(respBody))
+	}
+
+	var slug string
+	if err := json.Unmarshal(respBody, &slug); err != nil {
+		return fmt.Errorf("parse create response: %w", err)
+	}
+
+	if err := patchIngredients(cfg, path, slug); err != nil {
+		return fmt.Errorf("ingredient patch: %w", err)
 	}
 	return nil
 }
 
 func updateRecipe(cfg config, path string, slug string) error {
+	return patchIngredients(cfg, path, slug)
+}
+
+func patchIngredients(cfg config, path string, slug string) error {
 	raw, err := os.ReadFile(path)
 	if err != nil {
 		return err
@@ -213,6 +236,10 @@ func updateRecipe(cfg config, path string, slug string) error {
 
 	var recipe map[string]any
 	if err := json.Unmarshal(raw, &recipe); err != nil {
+		return err
+	}
+
+	if err := resolveIngredients(cfg, recipe); err != nil {
 		return err
 	}
 
@@ -239,6 +266,86 @@ func updateRecipe(cfg config, path string, slug string) error {
 		respBody, _ := io.ReadAll(resp.Body)
 		return fmt.Errorf("HTTP %d: %s", resp.StatusCode, string(respBody))
 	}
+	return nil
+}
+
+func parseIngredients(cfg config, ingredients []string) ([]json.RawMessage, error) {
+	payload := parseRequest{
+		Parser:      "nlp",
+		Ingredients: ingredients,
+	}
+	body, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest(http.MethodPost, cfg.baseURL+"/api/parser/ingredients", bytes.NewReader(body))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", "Bearer "+cfg.token)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return nil, fmt.Errorf("parser HTTP %d: %s", resp.StatusCode, string(respBody))
+	}
+
+	var results []parsedIngredientResult
+	if err := json.Unmarshal(respBody, &results); err != nil {
+		return nil, fmt.Errorf("parse parser response: %w", err)
+	}
+
+	parsed := make([]json.RawMessage, len(results))
+	for i, r := range results {
+		parsed[i] = r.Ingredient
+	}
+	return parsed, nil
+}
+
+func resolveIngredients(cfg config, recipe map[string]any) error {
+	raw, ok := recipe["recipeIngredient"]
+	if !ok {
+		return nil
+	}
+
+	arr, ok := raw.([]any)
+	if !ok || len(arr) == 0 {
+		return nil
+	}
+
+	var strings []string
+	for _, v := range arr {
+		s, ok := v.(string)
+		if !ok {
+			return nil
+		}
+		strings = append(strings, s)
+	}
+
+	parsed, err := parseIngredients(cfg, strings)
+	if err != nil {
+		return fmt.Errorf("ingredient parsing: %w", err)
+	}
+
+	resolved := make([]any, len(parsed))
+	for i, p := range parsed {
+		var obj any
+		if err := json.Unmarshal(p, &obj); err != nil {
+			return err
+		}
+		resolved[i] = obj
+	}
+	recipe["recipeIngredient"] = resolved
 	return nil
 }
 
