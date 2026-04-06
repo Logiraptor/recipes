@@ -1,3 +1,7 @@
+.git
+.github
+.cursor
+.DS_Store
 push-to-mealie
 mealplan-ingredients
 trmnl-recipe

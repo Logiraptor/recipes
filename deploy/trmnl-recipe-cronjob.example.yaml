@@ -1,0 +1,55 @@
+# Example only. Replace placeholder secret values before applying.
+# If the GHCR package stays private, add imagePullSecrets to the pod spec.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: trmnl-recipe-secrets
+  namespace: mealie
+type: Opaque
+stringData:
+  MEALIE_TOKEN: replace-with-mealie-api-token
+  TRMNL_WEBHOOK_URL: https://trmnl.com/api/custom_plugins/replace-with-plugin-uuid
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: trmnl-recipe
+  namespace: mealie
+spec:
+  schedule: "0 5,11,14 * * *"
+  # Change this to your local timezone so breakfast/lunch/dinner fire when expected.
+  timeZone: Etc/UTC
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: trmnl-recipe
+        spec:
+          containers:
+            - name: trmnl-recipe
+              image: ghcr.io/patrickoyarzun/recipes:main
+              imagePullPolicy: Always
+              env:
+                - name: MEALIE_BASE
+                  value: http://mealie
+                - name: MEALIE_TOKEN
+                  valueFrom:
+                    secretKeyRef:
+                      name: trmnl-recipe-secrets
+                      key: MEALIE_TOKEN
+                - name: TRMNL_WEBHOOK_URL
+                  valueFrom:
+                    secretKeyRef:
+                      name: trmnl-recipe-secrets
+                      key: TRMNL_WEBHOOK_URL
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 32Mi
+                limits:
+                  memory: 64Mi
+          restartPolicy: OnFailure
