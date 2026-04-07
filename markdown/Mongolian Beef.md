@@ -1,27 +1,35 @@
-Mongolian Beef with Steamed Rice
-Tender beef in a savory-sweet soy and ginger sauce — better than takeout and done in 20 minutes.
+Sichuan-Style Mongolian Beef
+Fragrant, savory, slightly spicy stir-fried beef with onions and scallions — authentic Sichuan flavors in about 20 minutes.
 
 INGREDIENTS
-• 1.5 pounds flank steak or sirloin, thinly sliced against the grain
-• 0.3 cups cornstarch
-• 3 tablespoons vegetable oil, divided
-• 4 pieces garlic cloves, minced
-• 1 teaspoons fresh ginger, grated (or 1/2 tsp ground ginger)
-• 0.5 cups low-sodium soy sauce
-• 0.5 cups brown sugar, packed
-• 0.5 cups water
-• 0.5 teaspoons sesame oil
-• 3 pieces green onions, sliced
-• 2 teaspoons sesame seeds (optional)
-• 2 cups long-grain white rice
+• 0.5 pounds beef tenderloin or flank steak, thinly sliced against the grain
+• 3-4 stalks scallions, sliced into 3 cm sections
+• 0.5 medium onion, thinly sliced
+• 1 inch piece ginger, peeled and shredded
+• 3 garlic cloves, minced
+• 2 dried chili peppers, sliced and seeds removed (optional for mild heat)
+• 1 egg white (for tenderizing the beef)
+• 1 teaspoon light soy sauce
+• 0.5 tablespoons oyster sauce
+• 1 tablespoon cooking wine (Shaoxing wine preferred)
+• 0.5 teaspoons salt
+• 1 teaspoon black pepper powder
+• 1 teaspoon cornstarch
+• 1 teaspoon sesame oil
+• 2 tablespoons cooking wine
+• 1 teaspoon dark soy sauce
+• 0.5 teaspoons sugar
+• 1 tablespoon water
+• 1 teaspoon sesame oil
+• 1-2 tablespoons vegetable oil
 
 STEPS
-1. Coat the beef: Toss 1.5 pounds flank steak or sirloin, thinly sliced against the grain in 0.3 cups cornstarch until lightly coated. Set aside while you make the sauce.
-2. Make the sauce: In a small bowl, whisk together 0.5 cups low-sodium soy sauce, 0.5 cups brown sugar, packed, 0.5 cups water, 4 pieces garlic cloves, minced, 1 teaspoons fresh ginger, grated (or 1/2 tsp ground ginger), and 0.5 teaspoons sesame oil. Set aside.
-3. Cook the rice: Cook 2 cups long-grain white rice according to package directions.
-4. Sear the beef: Heat 2 tbsp of 3 tablespoons vegetable oil, divided in a large skillet or wok over high heat until nearly smoking. Add beef in a single layer (work in batches if needed). Cook 1–2 min per side until browned. Remove and set aside.
-5. Simmer the sauce: Reduce heat to medium. Add remaining 1 tbsp 3 tablespoons vegetable oil, divided and pour in the sauce. Let it simmer 2–3 min until it thickens slightly. Return beef to the pan, toss to coat, and cook 1 more minute.
-6. Serve: Serve over rice, topped with 3 pieces green onions, sliced and 2 teaspoons sesame seeds (optional).
+1. Prepare the beef: Mix the sliced beef with light soy sauce, oyster sauce, 1 tablespoon cooking wine, salt, black pepper powder, cornstarch, and 1 teaspoon sesame oil. Mix well and let sit for about 10 minutes. Just before cooking, add egg white and stir in one direction until the mixture becomes sticky and slightly pasty — this tenderizes the meat.
+2. Prep vegetables: Slice onions, scallions, shred ginger, and mince garlic. If using, slice dried chili peppers.
+3. Heat wok and cook beef: Heat 1-2 tablespoons vegetable oil in a wok over high heat until smoking hot. Stir-fry beef quickly for 1-2 minutes until it just changes color (do not fully cook). Remove beef from wok and set aside.
+4. Sauté aromatics and vegetables: In the same wok, add a bit more oil if needed. Add ginger, garlic, most of the scallion sections (reserve some for garnish), dried chili peppers, and sliced onions. Stir-fry quickly for about 30 seconds until fragrant and onions start to soften but retain some crunch.
+5. Combine beef and sauce: Return the beef to the wok and stir well. Add 2 tablespoons cooking wine, dark soy sauce, sugar, 1 tablespoon water, and 1 teaspoon sesame oil. Toss everything together over high heat until the sauce thickens, coats the beef nicely, and caramelizes slightly (about 1-2 minutes).
+6. Finish and serve: Turn off heat, add remaining scallions, give a final toss, and serve immediately with steamed white rice or noodles.
 
 NOTES
-Toddler tip: the sauce is sweet and mild — kids usually love it. Thinly sliced beef cooks fast; freeze the steak for 15 minutes before slicing to make thin cuts easier. Reheats great; store beef and rice separately if possible.
+Freeze the steak for 15 minutes before slicing to make thin cuts easier. Stirring the egg white in one direction creates a velvety coating that keeps the beef tender. For a touch of extra heat, add doubanjiang (fermented chili bean paste) with the aromatics. Serves about 2 people.
