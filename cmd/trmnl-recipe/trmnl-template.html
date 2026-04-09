@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<div class="screen">
+  <div class="view view--full">
+    <div class="layout">
+      <div class="columns">
+        <div class="column">
+          <div class="markdown">
+            <span class="title">{{ meal_label | escape }}</span>
+            {% if has_recipe %}
+            <div class="content">
+              <strong>{{ recipe_name | escape }}</strong>
+            </div>
+            {% if recipe_yield != blank or total_time != blank or prep_time != blank %}
+            <span class="label label--underline">
+              {% if recipe_yield != blank %}Yield: {{ recipe_yield | escape }}{% endif %}
+              {% if recipe_yield != blank and total_time != blank %} · {% endif %}
+              {% if total_time != blank %}Total: {{ total_time | escape }}{% endif %}
+              {% if total_time != blank and prep_time != blank %} · {% endif %}
+              {% if prep_time != blank %}Prep: {{ prep_time | escape }}{% endif %}
+            </span>
+            {% endif %}
+            <div class="content">
+              <strong>Ingredients</strong>
+              <ul>
+                {% for ingredient in ingredients %}
+                <li>{{ ingredient | escape }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% else %}
+            <div class="content content--center">{{ message | escape }}</div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="markdown">
+            {% if has_recipe %}
+            <span class="title">Steps</span>
+            <div class="content">
+              <ol>
+                {% for instruction in instructions %}
+                <li>{{ instruction | escape }}</li>
+                {% endfor %}
+              </ol>
+            </div>
+            {% if truncated %}
+            <span class="label label--underline">{{ truncated_note | escape }}</span>
+            {% endif %}
+            {% else %}
+            <span class="title">Meal Plan</span>
+            <div class="content content--center">Check Mealie to add a recipe.</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="title_bar">
+      <span class="title">Mealie Recipe</span>
+      <span class="instance">{{ updated_at | date: "%a %b %-d, %-I:%M %p" }}</span>
+    </div>
+  </div>
+</div>
