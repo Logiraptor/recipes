@@ -82,7 +82,7 @@ The project uses an OpenAPI client that's generated from the Mealie API specific
 
 ### Environment Variables
 All tools require specific environment variables:
-- `MEALIE_BASE` - Base URL for the Mealie instance (defaults to "https://mealie.home.poyarzun.io")
+- `MEALIE_BASE` - Base URL for the Mealie instance (required)
 - `MEALIE_TOKEN` - Bearer token for Mealie API authentication
 - `TRMNL_WEBHOOK_URL` - URL to send the TRMNL webhook payload (only for trmnl-recipe)
 

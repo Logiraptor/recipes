@@ -1,3 +1,7 @@
 /push-to-mealie
 /mealplan-ingredients
 /trmnl-recipe
+
+.envrc
+.env
+.env.*

@@ -52,7 +52,7 @@ type ingredientFood struct {
 }
 
 func main() {
-	baseURL := envOr("MEALIE_BASE", "https://mealie.home.poyarzun.io")
+	baseURL := requireEnv("MEALIE_BASE")
 	token := requireEnv("MEALIE_TOKEN")
 
 	now := time.Now()
@@ -237,13 +237,6 @@ func truncate(b []byte, n int) string {
 		return string(b)
 	}
 	return string(b[:n]) + "..."
-}
-
-func envOr(key, fallback string) string {
-	if v := os.Getenv(key); v != "" {
-		return v
-	}
-	return fallback
 }
 
 func requireEnv(key string) string {
