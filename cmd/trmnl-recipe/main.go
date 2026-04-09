@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"os"
@@ -83,6 +84,13 @@ type mergeVariables struct {
 }
 
 func main() {
+	slog.SetDefault(slog.New(slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
+		Level: slog.LevelDebug,
+	})))
+
+	start := time.Now()
+	slog.Info("starting trmnl-recipe")
+
 	baseURL := requireEnv("MEALIE_BASE")
 	token := requireEnv("MEALIE_TOKEN")
 	webhookURL := requireEnv("TRMNL_WEBHOOK_URL")
@@ -90,15 +98,23 @@ func main() {
 	now := time.Now()
 	mealType := mealTypeAt(now)
 	mealLabel := titleCase(mealType)
+	slog.Info("resolved meal type", "time", now.Format(time.RFC3339), "hour", now.Hour(), "meal_type", mealType)
 
+	t0 := time.Now()
 	entries, err := fetchTodayMealplans(baseURL, token)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error fetching today's meal plan: %v\n", err)
+		slog.Error("failed to fetch today's meal plan", "error", err, "elapsed", time.Since(t0))
 		os.Exit(1)
 	}
+	entryTypes := make([]string, len(entries))
+	for i, e := range entries {
+		entryTypes[i] = e.EntryType
+	}
+	slog.Info("fetched today's mealplans", "count", len(entries), "entry_types", entryTypes, "elapsed", time.Since(t0))
 
 	entry := selectMeal(entries, mealType)
 	if entry == nil {
+		slog.Info("no meal found for type, pushing empty state", "meal_type", mealType)
 		payload := webhookPayload{
 			MergeVariables: mergeVariables{
 				HasRecipe: false,
@@ -108,20 +124,25 @@ func main() {
 				UpdatedAt: now.Format(time.RFC3339),
 			},
 		}
+		t1 := time.Now()
 		if err := postWebhook(webhookURL, payload); err != nil {
-			fmt.Fprintf(os.Stderr, "Error pushing empty state to TRMNL: %v\n", err)
+			slog.Error("failed to push empty state to TRMNL", "error", err, "elapsed", time.Since(t1))
 			os.Exit(1)
 		}
-		fmt.Printf("Pushed empty state for %s.\n", mealType)
+		slog.Info("pushed empty state", "meal_type", mealType, "webhook_elapsed", time.Since(t1), "total_elapsed", time.Since(start))
 		return
 	}
 
 	slug := entry.Recipe.Slug
+	slog.Info("selected meal", "meal_type", mealType, "recipe_slug", slug, "recipe_name", entry.Recipe.Name)
+
+	t1 := time.Now()
 	r, err := fetchRecipe(baseURL, token, slug)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error fetching recipe %q: %v\n", slug, err)
+		slog.Error("failed to fetch recipe", "slug", slug, "error", err, "elapsed", time.Since(t1))
 		os.Exit(1)
 	}
+	slog.Info("fetched recipe", "slug", slug, "name", r.Name, "ingredients", len(r.RecipeIngredient), "instructions", len(r.RecipeInstructions), "elapsed", time.Since(t1))
 
 	payload := webhookPayload{
 		MergeVariables: mergeVariables{
@@ -138,20 +159,23 @@ func main() {
 		},
 	}
 
+	origSize, _ := payloadSize(payload)
 	fitted, err := fitPayload(payload, trmnlMaxPayloadBytes)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error sizing TRMNL payload: %v\n", err)
+		slog.Error("failed to fit TRMNL payload", "original_bytes", origSize, "max_bytes", trmnlMaxPayloadBytes, "error", err)
 		os.Exit(1)
 	}
+	fittedSize, _ := payloadSize(fitted)
+	slog.Info("sized payload", "original_bytes", origSize, "fitted_bytes", fittedSize, "max_bytes", trmnlMaxPayloadBytes, "truncated", fitted.MergeVariables.Truncated)
 
+	t2 := time.Now()
 	if err := postWebhook(webhookURL, fitted); err != nil {
-		fmt.Fprintf(os.Stderr, "Error pushing recipe to TRMNL: %v\n", err)
+		slog.Error("failed to push recipe to TRMNL", "error", err, "elapsed", time.Since(t2))
 		os.Exit(1)
 	}
-
-	fmt.Printf("Pushed %s recipe: %s\n", mealType, fitted.MergeVariables.RecipeName)
+	slog.Info("pushed recipe to TRMNL", "recipe", fitted.MergeVariables.RecipeName, "meal_type", mealType, "webhook_elapsed", time.Since(t2), "total_elapsed", time.Since(start))
 	if fitted.MergeVariables.Truncated {
-		fmt.Println(fitted.MergeVariables.TruncatedNote)
+		slog.Warn("payload was truncated", "note", fitted.MergeVariables.TruncatedNote)
 	}
 }
 
@@ -386,6 +410,7 @@ func postWebhook(endpoint string, payload webhookPayload) error {
 	if err != nil {
 		return err
 	}
+	slog.Debug("POST webhook", "url", endpoint, "body_bytes", len(body))
 
 	req, err := http.NewRequest(http.MethodPost, endpoint, bytes.NewReader(body))
 	if err != nil {
@@ -404,6 +429,7 @@ func postWebhook(endpoint string, payload webhookPayload) error {
 	if err != nil {
 		return err
 	}
+	slog.Debug("POST webhook response", "status", resp.StatusCode, "body_bytes", len(respBody))
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return fmt.Errorf("HTTP %d: %s", resp.StatusCode, truncate(respBody, 200))
 	}
@@ -411,6 +437,7 @@ func postWebhook(endpoint string, payload webhookPayload) error {
 }
 
 func doGet(endpoint, token string) ([]byte, error) {
+	slog.Debug("GET", "url", endpoint)
 	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
 	if err != nil {
 		return nil, err
@@ -428,6 +455,7 @@ func doGet(endpoint, token string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	slog.Debug("GET response", "url", endpoint, "status", resp.StatusCode, "body_bytes", len(body))
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return nil, fmt.Errorf("HTTP %d: %s", resp.StatusCode, truncate(body, 200))
 	}
@@ -451,7 +479,7 @@ func truncate(b []byte, n int) string {
 func requireEnv(key string) string {
 	v := os.Getenv(key)
 	if v == "" {
-		fmt.Fprintf(os.Stderr, "Error: %s env var is required\n", key)
+		slog.Error("required environment variable is not set", "key", key)
 		os.Exit(1)
 	}
 	return v
