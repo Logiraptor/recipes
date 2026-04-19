@@ -199,17 +199,17 @@ func createRecipe(ctx context.Context, client *mealie.Client, path string) error
 		return fmt.Errorf("parse create response: %w", err)
 	}
 
-	if err := patchIngredients(ctx, client, path, slug); err != nil {
-		return fmt.Errorf("ingredient patch: %w", err)
+	if err := patchRecipe(ctx, client, path, slug); err != nil {
+		return fmt.Errorf("recipe patch: %w", err)
 	}
 	return nil
 }
 
 func updateRecipe(ctx context.Context, client *mealie.Client, path string, slug string) error {
-	return patchIngredients(ctx, client, path, slug)
+	return patchRecipe(ctx, client, path, slug)
 }
 
-func patchIngredients(ctx context.Context, client *mealie.Client, path string, slug string) error {
+func patchRecipe(ctx context.Context, client *mealie.Client, path string, slug string) error {
 	raw, err := os.ReadFile(path)
 	if err != nil {
 		return err
@@ -220,17 +220,46 @@ func patchIngredients(ctx context.Context, client *mealie.Client, path string, s
 		return err
 	}
 
+	patch := make(map[string]any)
+
+	if desc, ok := stringField(recipe, "description"); ok {
+		patch["description"] = desc
+	}
+
+	if steps := buildSteps(recipe); steps != nil {
+		patch["recipeInstructions"] = steps
+	}
+
+	for _, key := range []string{"prepTime", "cookTime", "totalTime"} {
+		if v, ok := stringField(recipe, key); ok {
+			patch[key] = v
+		}
+	}
+
+	if v, ok := stringField(recipe, "recipeYield"); ok {
+		patch["recipeYield"] = v
+	}
+
+	if cats := buildCategories(recipe); cats != nil {
+		patch["recipeCategory"] = cats
+	}
+
+	if tags := buildTags(recipe); tags != nil {
+		patch["tags"] = tags
+	}
+
 	ingredients, err := resolveIngredients(ctx, client, recipe)
 	if err != nil {
 		return err
 	}
-	if ingredients == nil {
+	if ingredients != nil {
+		patch["recipeIngredient"] = ingredients
+	}
+
+	if len(patch) == 0 {
 		return nil
 	}
 
-	patch := map[string]any{
-		"recipeIngredient": ingredients,
-	}
 	patchBody, err := json.Marshal(patch)
 	if err != nil {
 		return err
@@ -247,6 +276,110 @@ func patchIngredients(ctx context.Context, client *mealie.Client, path string, s
 		return fmt.Errorf("HTTP %d: %s", resp.StatusCode, string(respBody))
 	}
 	return nil
+}
+
+func stringField(recipe map[string]any, key string) (string, bool) {
+	v, ok := recipe[key]
+	if !ok {
+		return "", false
+	}
+	s, ok := v.(string)
+	if !ok || s == "" {
+		return "", false
+	}
+	return s, true
+}
+
+func buildSteps(recipe map[string]any) []map[string]string {
+	raw, ok := recipe["recipeInstructions"]
+	if !ok {
+		return nil
+	}
+	arr, ok := raw.([]any)
+	if !ok || len(arr) == 0 {
+		return nil
+	}
+	steps := make([]map[string]string, 0, len(arr))
+	for _, v := range arr {
+		switch v := v.(type) {
+		case string:
+			steps = append(steps, map[string]string{"text": v})
+		case map[string]any:
+			if t, ok := v["text"].(string); ok {
+				steps = append(steps, map[string]string{"text": t})
+			}
+		}
+	}
+	if len(steps) == 0 {
+		return nil
+	}
+	return steps
+}
+
+func buildCategories(recipe map[string]any) []map[string]string {
+	raw, ok := recipe["recipeCategory"]
+	if !ok {
+		return nil
+	}
+
+	var names []string
+	switch v := raw.(type) {
+	case string:
+		if v != "" {
+			names = []string{v}
+		}
+	case []any:
+		for _, item := range v {
+			if s, ok := item.(string); ok && s != "" {
+				names = append(names, s)
+			}
+		}
+	}
+	if len(names) == 0 {
+		return nil
+	}
+
+	cats := make([]map[string]string, len(names))
+	for i, name := range names {
+		cats[i] = map[string]string{"name": name, "slug": toSlug(name)}
+	}
+	return cats
+}
+
+// buildTags merges recipeCuisine and keywords into a single tags array.
+func buildTags(recipe map[string]any) []map[string]string {
+	var names []string
+
+	if v, ok := stringField(recipe, "recipeCuisine"); ok {
+		names = append(names, v)
+	}
+
+	if raw, ok := recipe["keywords"]; ok {
+		if arr, ok := raw.([]any); ok {
+			for _, item := range arr {
+				if s, ok := item.(string); ok && s != "" {
+					names = append(names, s)
+				}
+			}
+		}
+	}
+
+	if len(names) == 0 {
+		return nil
+	}
+
+	tags := make([]map[string]string, len(names))
+	for i, name := range names {
+		tags[i] = map[string]string{"name": name, "slug": toSlug(name)}
+	}
+	return tags
+}
+
+func toSlug(name string) string {
+	s := strings.ToLower(name)
+	s = strings.ReplaceAll(s, " ", "-")
+	s = strings.ReplaceAll(s, "&", "and")
+	return s
 }
 
 func parseIngredients(ctx context.Context, client *mealie.Client, ingredients []string) ([]mealie.ParsedIngredient, error) {
