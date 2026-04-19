@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/patrickoyarzun/recipes/mealie"
@@ -238,6 +240,10 @@ func patchRecipe(ctx context.Context, client *mealie.Client, path string, slug s
 
 	if v, ok := stringField(recipe, "recipeYield"); ok {
 		patch["recipeYield"] = v
+		if n, ok := parseLeadingNumber(v); ok {
+			patch["recipeServings"] = n
+			patch["recipeYieldQuantity"] = n
+		}
 	}
 
 	ingredients, err := resolveIngredients(ctx, client, recipe)
@@ -280,6 +286,22 @@ func stringField(recipe map[string]any, key string) (string, bool) {
 		return "", false
 	}
 	return s, true
+}
+
+var leadingNumberRe = regexp.MustCompile(`^\s*(\d+(?:\.\d+)?)`)
+
+// parseLeadingNumber extracts the first number from a yield string like
+// "4 servings" or "12 mini frittatas", returning false if none is found.
+func parseLeadingNumber(s string) (float64, bool) {
+	m := leadingNumberRe.FindStringSubmatch(s)
+	if m == nil {
+		return 0, false
+	}
+	n, err := strconv.ParseFloat(m[1], 64)
+	if err != nil || n <= 0 {
+		return 0, false
+	}
+	return n, true
 }
 
 func buildSteps(recipe map[string]any) []map[string]any {
