@@ -240,14 +240,6 @@ func patchRecipe(ctx context.Context, client *mealie.Client, path string, slug s
 		patch["recipeYield"] = v
 	}
 
-	if cats := buildCategories(recipe); cats != nil {
-		patch["recipeCategory"] = cats
-	}
-
-	if tags := buildTags(recipe); tags != nil {
-		patch["tags"] = tags
-	}
-
 	ingredients, err := resolveIngredients(ctx, client, recipe)
 	if err != nil {
 		return err
@@ -290,7 +282,7 @@ func stringField(recipe map[string]any, key string) (string, bool) {
 	return s, true
 }
 
-func buildSteps(recipe map[string]any) []map[string]string {
+func buildSteps(recipe map[string]any) []map[string]any {
 	raw, ok := recipe["recipeInstructions"]
 	if !ok {
 		return nil
@@ -299,87 +291,28 @@ func buildSteps(recipe map[string]any) []map[string]string {
 	if !ok || len(arr) == 0 {
 		return nil
 	}
-	steps := make([]map[string]string, 0, len(arr))
+	steps := make([]map[string]any, 0, len(arr))
 	for _, v := range arr {
+		var text string
 		switch v := v.(type) {
 		case string:
-			steps = append(steps, map[string]string{"text": v})
+			text = v
 		case map[string]any:
 			if t, ok := v["text"].(string); ok {
-				steps = append(steps, map[string]string{"text": t})
+				text = t
 			}
+		}
+		if text != "" {
+			steps = append(steps, map[string]any{
+				"text":                 text,
+				"ingredientReferences": []any{},
+			})
 		}
 	}
 	if len(steps) == 0 {
 		return nil
 	}
 	return steps
-}
-
-func buildCategories(recipe map[string]any) []map[string]string {
-	raw, ok := recipe["recipeCategory"]
-	if !ok {
-		return nil
-	}
-
-	var names []string
-	switch v := raw.(type) {
-	case string:
-		if v != "" {
-			names = []string{v}
-		}
-	case []any:
-		for _, item := range v {
-			if s, ok := item.(string); ok && s != "" {
-				names = append(names, s)
-			}
-		}
-	}
-	if len(names) == 0 {
-		return nil
-	}
-
-	cats := make([]map[string]string, len(names))
-	for i, name := range names {
-		cats[i] = map[string]string{"name": name, "slug": toSlug(name)}
-	}
-	return cats
-}
-
-// buildTags merges recipeCuisine and keywords into a single tags array.
-func buildTags(recipe map[string]any) []map[string]string {
-	var names []string
-
-	if v, ok := stringField(recipe, "recipeCuisine"); ok {
-		names = append(names, v)
-	}
-
-	if raw, ok := recipe["keywords"]; ok {
-		if arr, ok := raw.([]any); ok {
-			for _, item := range arr {
-				if s, ok := item.(string); ok && s != "" {
-					names = append(names, s)
-				}
-			}
-		}
-	}
-
-	if len(names) == 0 {
-		return nil
-	}
-
-	tags := make([]map[string]string, len(names))
-	for i, name := range names {
-		tags[i] = map[string]string{"name": name, "slug": toSlug(name)}
-	}
-	return tags
-}
-
-func toSlug(name string) string {
-	s := strings.ToLower(name)
-	s = strings.ReplaceAll(s, " ", "-")
-	s = strings.ReplaceAll(s, "&", "and")
-	return s
 }
 
 func parseIngredients(ctx context.Context, client *mealie.Client, ingredients []string) ([]mealie.ParsedIngredient, error) {
