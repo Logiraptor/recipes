@@ -1,6 +1,8 @@
 Sichuan-Style Mongolian Beef
 Fragrant, savory, slightly spicy stir-fried beef with onions and scallions — authentic Sichuan flavors in about 20 minutes.
 
+Servings: 2
+
 INGREDIENTS
 • 0.5 pounds beef tenderloin or flank steak, thinly sliced against the grain
 • 3-4 stalks scallions, sliced into 3 cm sections

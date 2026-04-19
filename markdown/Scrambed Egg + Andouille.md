@@ -1,6 +1,8 @@
 Scrambled Eggs with Andouille Sausage and Toast
 Crispy andouille and fluffy eggs — a protein-packed Southern breakfast that comes together in 10 minutes.
 
+Servings: 4
+
 INGREDIENTS
 • 6 pieces large eggs
 • 4 pieces andouille sausage links (or 8 oz sliced)

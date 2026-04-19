@@ -1,6 +1,8 @@
 Banana Oat Pancakes with Maple Syrup
 Naturally sweet, fluffy, and made with oats for fiber — a weekday breakfast the whole family will love.
 
+Servings: 4
+
 INGREDIENTS
 • 1 pieces ripe banana, mashed
 • 1 cups rolled oats

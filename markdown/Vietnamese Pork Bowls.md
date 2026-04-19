@@ -1,6 +1,8 @@
 Vietnamese Pork Bowls
 A quick caramelized pork bowl with fish sauce and brown sugar, served over rice with fresh toppings.
 
+Servings: 4
+
 INGREDIENTS
 • 1.5 tablespoons cooking oil (peanut oil preferred)
 • 0.5 onion, finely diced (brown, white, or yellow)

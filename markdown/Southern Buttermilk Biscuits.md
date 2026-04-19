@@ -1,6 +1,8 @@
 Southern Buttermilk Biscuits
 Authentic Southern buttermilk biscuits — light, tender, and golden brown, handed down through generations.
 
+Servings: 10 biscuits
+
 INGREDIENTS
 • 2 cups unbleached all-purpose flour, plus more for dusting
 • 0.25 teaspoons baking soda
@@ -10,6 +12,7 @@ INGREDIENTS
 • 1 cup buttermilk
 
 STEPS
+
 1. Preheat oven: Preheat your oven to 450°F.
 2. Combine dry ingredients: Combine 2 cups unbleached all-purpose flour, 0.25 teaspoons baking soda, 1 tablespoon baking powder, and 1 teaspoon kosher salt in a bowl or food processor.
 3. Cut in butter: Cut 6 tablespoons unsalted butter, very cold into chunks and cut into the flour until it resembles coarse meal. If using a food processor, pulse a few times until this consistency is achieved.

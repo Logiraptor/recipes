@@ -1,6 +1,8 @@
 Shrimp and Sausage Jambalaya
 The ultimate Southern one-pot meal — smoky sausage, shrimp, chicken, and rice all simmered together with bold Cajun spice.
 
+Servings: 6
+
 INGREDIENTS
 • 8 ounces andouille sausage, sliced
 • 1 pounds boneless skinless chicken thighs, diced

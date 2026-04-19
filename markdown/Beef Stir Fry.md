@@ -1,6 +1,8 @@
 Garlic Ginger Beef Stir Fry with Rice
 A quick, high-protein weeknight stir fry with garlic, ginger, and a savory sauce — on the table in under 25 minutes.
 
+Servings: 4
+
 INGREDIENTS
 • 1.5 pounds flank steak or sirloin, thinly sliced
 • 2 cups broccoli florets

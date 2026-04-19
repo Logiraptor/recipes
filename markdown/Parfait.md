@@ -1,6 +1,8 @@
 Greek Yogurt Parfait with Berries and Granola
 A no-cook, grab-and-go breakfast with tons of protein — layer it the night before for a stress-free morning.
 
+Servings: 2
+
 INGREDIENTS
 • 2 cups plain whole-milk Greek yogurt
 • 1 cups mixed fresh berries (strawberries, blueberries, raspberries)

@@ -1,6 +1,8 @@
 Make-Ahead Veggie and Cheese Mini Frittatas
 Make a batch Sunday night — grab one each morning all week. Great protein, great fiber, toddler approved.
 
+Servings: 12 mini frittatas
+
 INGREDIENTS
 • 6 pieces large eggs
 • 1 cups milk

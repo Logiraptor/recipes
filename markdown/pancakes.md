@@ -1,5 +1,7 @@
 Here's a classic, fluffy **pancake recipe** with easy steps using simple ingredients:
 
+Servings: 8 pancakes
+
 **Ingredients**
 - 1 ½ cups all-purpose flour
 - 1 tablespoon sugar

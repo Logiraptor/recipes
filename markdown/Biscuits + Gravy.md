@@ -1,6 +1,8 @@
 Biscuits and Sausage Gravy
 Soft, buttery biscuits smothered in creamy sausage gravy — the ultimate Southern comfort breakfast.
 
+Servings: 6
+
 INGREDIENTS
 • 2 cups all-purpose flour (for biscuits)
 • 1 tablespoons baking powder

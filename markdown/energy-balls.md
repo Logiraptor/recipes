@@ -1,6 +1,8 @@
 No-Bake Oatmeal Peanut Butter Energy Balls
 No oven required — roll them up Sunday and snack all week. Packed with oats, peanut butter, and just enough chocolate to feel like a treat.
 
+Servings: 24 balls
+
 INGREDIENTS
 • 2 cups rolled oats
 • 0.5 cups peanut butter (or almond butter)

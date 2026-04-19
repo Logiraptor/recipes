@@ -1,6 +1,8 @@
 Cajun Red Beans & Rice
 A flavorful, heart-healthy, egg-free, toddler-friendly Cajun classic — designed for batch cooking and big flavor without too much heat.
 
+Servings: 6
+
 INGREDIENTS
 • 1.5 cups rice
 • 3 pieces bacon, chopped

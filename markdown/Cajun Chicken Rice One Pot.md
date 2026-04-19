@@ -1,6 +1,8 @@
 Cajun Chicken and Rice (One-Pot)
 Everything cooks in one pot — bold Cajun flavor, tender chicken, and rice that soaks up every bit of the sauce.
 
+Servings: 4
+
 INGREDIENTS
 • 1.5 pounds boneless skinless chicken thighs, cut into bite-size pieces
 • 2 teaspoons Cajun seasoning, divided
