@@ -23,13 +23,13 @@ INGREDIENTS
 • 0.25 teaspoon cayenne pepper
 • 1 teaspoon salt
 • 0.5 teaspoon black pepper
-• 1 lime, juiced
-• Fresh cilantro, for garnish
+• 1 lemon, juiced
+• Fresh parsley, for garnish
 • Quinoa, for serving
 
 STEPS
 1. Sauté the aromatics: Set the Instant Pot to Sauté mode. Heat olive oil, add onion, and cook until softened, about 5 minutes. Add garlic, ginger, turmeric, cumin, coriander, cinnamon, and cayenne. Stir for 1 minute until fragrant. Press Cancel.
 2. Add the base: Add rinsed lentils, diced tomatoes, coconut milk, vegetable broth, sweet potato, salt, and black pepper. Stir to combine.
 3. Pressure cook: Lock the lid, set the valve to Sealing, and cook on Manual/Pressure Cook (High) for 10 minutes. When done, let the pressure release naturally for 10 minutes, then quick-release any remaining pressure.
-4. Finish: Open the lid, stir in baby spinach and lime juice. Let sit 5 minutes until spinach wilts. Taste and adjust salt.
-5. Serve over quinoa, topped with fresh cilantro.
+4. Finish: Open the lid, stir in baby spinach and lemon juice. Let sit 5 minutes until spinach wilts. Taste and adjust salt.
+5. Serve over quinoa, topped with fresh parsley.
