@@ -1,0 +1,22 @@
+{
+  "name": "Turmeric Golden Oats",
+  "description": "Warm, comforting oatmeal loaded with anti-inflammatory spices and antioxidant-rich toppings.",
+  "recipeIngredient": [
+    "1 cup rolled oats",
+    "2 cups unsweetened almond milk",
+    "1 teaspoon ground turmeric",
+    "0.5 teaspoon ground cinnamon",
+    "0.3 teaspoon ground ginger",
+    "0.3 teaspoon black pepper",
+    "1 tablespoon honey or maple syrup",
+    "0.5 cup fresh blueberries",
+    "0.3 cup walnuts, roughly chopped",
+    "1 tablespoon chia seeds"
+  ],
+  "recipeInstructions": [
+    "Combine rolled oats and unsweetened almond milk in a saucepan over medium heat. Bring to a gentle simmer, stirring occasionally.",
+    "Stir in ground turmeric, ground cinnamon, ground ginger, and black pepper. Cook, stirring, until oats are creamy and thick.",
+    "Remove from heat. Stir in honey or maple syrup. Divide into bowls and top with fresh blueberries, roughly chopped walnuts, and chia seeds."
+  ],
+  "recipeCategory": "Breakfast"
+}
