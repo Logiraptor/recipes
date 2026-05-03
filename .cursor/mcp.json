@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "apple-reminders": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-apple-events"]
+    }
+  }
+}
