@@ -1,20 +1,17 @@
 {
-  "name": "Wild Blueberry & Avocado Smoothie Bowl",
-  "description": "A vibrant, creamy smoothie bowl packed with omega-3s, antioxidants, and gut-friendly ingredients.",
+  "name": "Blueberry Avocado Smoothie",
+  "description": "A quick, drinkable smoothie the whole family can share — toddler-friendly and one-handed.",
   "recipeIngredient": [
-    "1 cup frozen wild blueberries",
+    "1 cup frozen blueberries",
     "0.5 cup frozen banana, sliced",
     "1 cup baby spinach",
     "1 tablespoon chia seeds",
-    "0.5 cup unsweetened coconut milk",
-    "0.3 avocado",
-    "3 tablespoons hemp seeds",
-    "0.5 teaspoon fresh ginger, grated"
+    "1 cup unsweetened coconut milk",
+    "0.3 avocado"
   ],
   "recipeInstructions": [
-    "Blend the base: Add frozen wild blueberries, frozen banana, baby spinach, chia seeds, unsweetened coconut milk, avocado, and fresh ginger to a high-speed blender. Blend until completely smooth and very thick.",
-    "Top & serve: Pour into a wide bowl. Top with hemp seeds. Serve immediately."
+    "Blend & pour: Add all ingredients to a blender. Blend until smooth, adding a splash more coconut milk if needed. Pour into cups and serve."
   ],
-  "recipeYield": "1 serving",
+  "recipeYield": "2 servings",
   "recipeCategory": "Breakfast"
 }

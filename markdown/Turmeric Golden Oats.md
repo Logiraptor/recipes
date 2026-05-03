@@ -1,22 +1,18 @@
 Turmeric Golden Oats
-Warm, comforting oatmeal loaded with anti-inflammatory spices and antioxidant-rich toppings.
+Warm oatmeal with turmeric and cinnamon — scales easily for the whole family.
 
 INGREDIENTS
-• 1 cups rolled oats
-• 2 cups unsweetened coconut milk
+• 1.5 cups rolled oats
+• 3 cups unsweetened coconut milk
 • 1 teaspoons ground turmeric
 • 0.5 teaspoons ground cinnamon
-• 0.3 teaspoons ground ginger
-• 0.3 teaspoons black pepper
+• 1 pinch black pepper
 • 1 tablespoons honey or maple syrup
-• 0.5 cups frozen wild blueberries, thawed
-• 0.3 cups walnuts, roughly chopped
-• 1 tablespoons chia seeds
+• 0.5 cups frozen blueberries
 
 STEPS
-1. Simmer oats: Combine 1 cups rolled oats and 2 cups unsweetened coconut milk in a saucepan over medium heat. Bring to a gentle simmer, stirring occasionally.
-2. Add spices: Stir in 1 teaspoons ground turmeric, 0.5 teaspoons ground cinnamon, 0.3 teaspoons ground ginger, and 0.3 teaspoons black pepper. Cook, stirring, until oats are creamy and thick.
-3. Sweeten & serve: Remove from heat. Stir in 1 tablespoons honey or maple syrup. Divide into bowls and top with 0.5 cups frozen wild blueberries, thawed, 0.3 cups walnuts, roughly chopped, and 1 tablespoons chia seeds.
+1. Cook: Combine 1.5 cups rolled oats, 3 cups unsweetened coconut milk, 1 teaspoons ground turmeric, 0.5 teaspoons ground cinnamon, and 1 pinch black pepper in a saucepan. Bring to a simmer over medium heat, stirring occasionally, until thick and creamy.
+2. Serve: Stir in 1 tablespoons honey or maple syrup. Divide into bowls and top with 0.5 cups frozen blueberries.
 
 NOTES
-Black pepper is essential — it boosts turmeric absorption by up to 2000%. Swap blueberries for cherries or pomegranate seeds for variety.
+Scaled up to feed 2-3 people. A 2-year-old will happily eat this as-is. Skip the walnuts for little kids — choking hazard.
