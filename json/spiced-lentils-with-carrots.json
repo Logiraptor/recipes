@@ -1,0 +1,37 @@
+{
+  "name": "Spiced Lentils with Carrots",
+  "description": "A saucy one-skillet green lentil main warm with cumin, ginger, cinnamon, and allspice, lightly sweetened by carrots and dried fruit.",
+  "recipeYield": "4 servings",
+  "prepTime": "PT10M",
+  "cookTime": "PT30M",
+  "totalTime": "PT40M",
+  "recipeCategory": "Main Course",
+  "suitableForDiet": "https://schema.org/VeganDiet",
+  "tool": [
+    "deep skillet"
+  ],
+  "recipeIngredient": [
+    "1 yellow onion, diced",
+    "4 garlic cloves, minced",
+    "1 teaspoon fresh ginger, grated",
+    "4 carrots, peeled and diced (about 2 cups)",
+    "2 tablespoons olive oil",
+    "1 teaspoon ground cumin",
+    "0.5 teaspoon ground cinnamon",
+    "0.5 teaspoon ground allspice",
+    "0.25 teaspoon crushed red pepper, optional",
+    "1 cup green or brown lentils, rinsed",
+    "3 tablespoons tomato paste",
+    "0.25 cup chopped dried apricots or raisins",
+    "3 cups vegetable broth",
+    "1 tablespoon fresh parsley, chopped, optional"
+  ],
+  "recipeInstructions": [
+    "Dice the onion, mince the garlic, grate the ginger, and peel and dice the carrots.",
+    "Add the onion, garlic, ginger, and olive oil to a deep skillet. Saute over medium heat about 5 minutes until the onions are soft and translucent.",
+    "Add the carrots, cumin, cinnamon, allspice, and crushed red pepper (if using). Saute about 2 minutes more.",
+    "Add the lentils, tomato paste, dried apricots or raisins, and broth. Stir until the tomato paste dissolves. Cover and bring to a boil over high heat.",
+    "Reduce heat to medium-low and simmer, covered, about 30 minutes, stirring occasionally, until the lentils and carrots are very tender.",
+    "Taste and season with salt and pepper as needed. Serve over rice, polenta, or mashed potatoes and top with parsley."
+  ]
+}

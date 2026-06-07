@@ -1,0 +1,44 @@
+{
+  "name": "Instant Pot Coconut Chicken Curry",
+  "description": "A from-scratch coconut chicken curry built on an onion-tomato-ginger-garlic masala, finished with full-fat coconut milk and lime. Dairy-free and gluten-free.",
+  "recipeYield": "4 servings",
+  "prepTime": "PT10M",
+  "cookTime": "PT20M",
+  "totalTime": "PT30M",
+  "recipeCuisine": "Indian",
+  "recipeIngredient": [
+    "1 tablespoon ghee or oil",
+    "1 teaspoon cumin seeds, optional",
+    "1 cup yellow onion, diced",
+    "0.5 tablespoon ginger, grated",
+    "0.5 tablespoon garlic, minced",
+    "1 cup tomato puree (canned, or 2 blended tomatoes)",
+    "1 pound boneless skinless chicken thighs, cut into 1-inch pieces",
+    "0.25 cup water",
+    "1 cup full-fat unsweetened coconut milk",
+    "1 teaspoon garam masala",
+    "1 tablespoon lime juice",
+    "1 teaspoon ground cumin",
+    "0.5 teaspoon ground turmeric",
+    "1 teaspoon Kashmiri red chili powder (or paprika)",
+    "1 teaspoon coriander powder",
+    "1 teaspoon salt",
+    "Cilantro, to garnish"
+  ],
+  "recipeInstructions": [
+    "Set Instant Pot to Sauté and heat. Add ghee, then cumin seeds; sizzle 30 seconds.",
+    "Add onion, ginger, and garlic. Sauté about 3 minutes until onions are golden.",
+    "Add tomato puree and all ground spices. Sauté 2-3 minutes.",
+    "Add chicken; stir and sauté 3-4 minutes to build flavor.",
+    "Add water and stir, scraping the bottom. Cancel Sauté, seal the lid, and set the vent to sealing.",
+    "Pressure cook on high for 4 minutes, then quick-release.",
+    "Stir in coconut milk and garam masala; simmer on Sauté 4-5 minutes until thickened.",
+    "Stir in lime juice and garnish with cilantro. Serve over basmati rice or with naan."
+  ],
+  "suitableForDiet": [
+    "https://schema.org/GlutenFreeDiet"
+  ],
+  "tool": [
+    "Instant Pot"
+  ]
+}

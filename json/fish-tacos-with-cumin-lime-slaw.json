@@ -1,0 +1,41 @@
+{
+  "name": "Fish Tacos with Cumin Lime Slaw",
+  "description": "Quick skillet cod tacos with a creamy cumin-lime cabbage slaw, avocado, and warm tortillas. Works great with frozen cod.",
+  "recipeYield": "4 servings",
+  "prepTime": "PT15M",
+  "cookTime": "PT15M",
+  "totalTime": "PT30M",
+  "recipeCategory": "Main Course",
+  "recipeCuisine": "Mexican",
+  "tool": [
+    "skillet"
+  ],
+  "recipeIngredient": [
+    "0.25 cup mayonnaise",
+    "1 lime, juiced (about 1 tablespoon)",
+    "0.5 teaspoon ground cumin",
+    "0.125 teaspoon cayenne pepper",
+    "0.25 teaspoon salt",
+    "0.5 teaspoon granulated sugar",
+    "4 cups coleslaw mix (shredded cabbage and carrots)",
+    "2 green onions, sliced",
+    "8 small corn tortillas",
+    "2 teaspoons chili powder",
+    "0.5 teaspoon ground cumin",
+    "0.25 teaspoon garlic powder",
+    "0.125 teaspoon salt",
+    "1 tablespoon cooking oil, divided",
+    "1 pound cod fillets",
+    "1 avocado, sliced",
+    "1 jalapeno, sliced, optional"
+  ],
+  "recipeInstructions": [
+    "If using frozen cod, thaw in the fridge overnight or in a sealed bag under cold water, then pat dry.",
+    "Make the slaw dressing: stir together the mayonnaise, lime juice, 0.5 teaspoon cumin, cayenne, 0.25 teaspoon salt, and sugar.",
+    "Combine the coleslaw mix and green onions in a bowl, pour the dressing over, and stir to coat. Refrigerate until serving.",
+    "Toast the tortillas in a dry skillet over medium heat until lightly browned on each side. Stack and cover with foil to keep warm.",
+    "Mix the fish seasoning: chili powder, 0.5 teaspoon cumin, garlic powder, and 0.125 teaspoon salt. Cut the cod into taco-sized pieces and season both sides.",
+    "Heat 0.5 tablespoon oil in a large skillet over medium heat. Cook half the fish in a single layer, a few minutes per side, until opaque, firm, and flaking (145F). Repeat with the remaining oil and fish.",
+    "Build each taco with fish, avocado, a scoop of slaw, and jalapeno slices if using. Serve warm."
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "name": "Garlic Butter Baked Cod",
+  "description": "Tender cod fillets baked under a simple garlic-butter-parsley paste with lemon — fast, mild, and kid-friendly. Works great with frozen cod.",
+  "recipeYield": "4 servings",
+  "prepTime": "PT10M",
+  "cookTime": "PT20M",
+  "totalTime": "PT30M",
+  "tool": [
+    "baking dish"
+  ],
+  "recipeIngredient": [
+    "1 pound cod (4 fillets, about 4 ounces each)",
+    "4 tablespoons butter, room temperature",
+    "2 tablespoons olive oil",
+    "4 garlic cloves, minced",
+    "1/4 teaspoon paprika",
+    "1/4 teaspoon salt",
+    "2 tablespoons fresh parsley, finely chopped (or 1 teaspoon dried)",
+    "1 lemon"
+  ],
+  "recipeInstructions": [
+    "Preheat oven to 400°F. If using frozen cod, thaw in a sealed bag under cold water for 10-15 minutes, then pat dry.",
+    "In a small bowl, combine the butter, olive oil, garlic, paprika, salt, and parsley. Stir into a fairly smooth paste.",
+    "Place the cod fillets in a baking dish. Spread the garlic-butter mixture evenly over each fillet.",
+    "Slice half the lemon and lay the slices on top of the fish; cut the other half into wedges for serving.",
+    "Bake 15-20 minutes, until the fish flakes easily and reaches 145°F internal (thicker fillets or ceramic dishes may take longer).",
+    "Spoon the pan juices over the fish and serve immediately with lemon wedges."
+  ]
+}

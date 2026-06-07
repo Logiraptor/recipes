@@ -1,0 +1,36 @@
+{
+  "name": "One-Skillet Mediterranean Chicken",
+  "description": "Seared chicken braised in a garlicky lemon, white wine, tomato, and olive sauce with oregano and parsley.",
+  "recipeYield": "4 servings",
+  "prepTime": "PT10M",
+  "cookTime": "PT20M",
+  "totalTime": "PT30M",
+  "recipeCuisine": "Mediterranean",
+  "recipeIngredient": [
+    "4 boneless skinless chicken breasts (thighs also work)",
+    "2 tablespoons garlic, minced",
+    "Kosher salt",
+    "Black pepper",
+    "1 tablespoon dried oregano, divided",
+    "2 tablespoons extra virgin olive oil",
+    "0.5 cup dry white wine (or extra chicken broth)",
+    "1 large lemon, juiced",
+    "0.5 cup chicken broth",
+    "1 medium red onion, finely chopped",
+    "4 small tomatoes, diced (or 1 can chopped tomatoes, 15 ounces)",
+    "0.25 cup sliced green olives (or kalamata, or capers)",
+    "1 handful fresh parsley, chopped",
+    "Crumbled feta cheese, optional"
+  ],
+  "recipeInstructions": [
+    "Pat the chicken dry. Make three shallow slits on each side of each breast.",
+    "Rub garlic over both sides, pushing some into the slits. Season both sides with salt, pepper, and half the oregano.",
+    "Heat olive oil in a large skillet over medium-high. Sear chicken on both sides, then add white wine and reduce by half.",
+    "Add lemon juice and chicken broth. Sprinkle on the remaining oregano. Reduce heat to medium, cover, and cook about 5-6 minutes per side until the internal temperature reaches 165°F.",
+    "Uncover; top with chopped onion, tomatoes, and olives. Cover again and cook 3 minutes.",
+    "Finish with parsley and feta, if using. Serve over rice or orzo, or with crusty bread."
+  ],
+  "tool": [
+    "Large skillet"
+  ]
+}
