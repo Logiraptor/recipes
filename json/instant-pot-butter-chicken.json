@@ -1,0 +1,37 @@
+{
+  "name": "Instant Pot Butter Chicken",
+  "description": "Restaurant-quality Indian butter chicken in under 30 minutes. Creamy, authentic, and easy.",
+  "recipeYield": "4 servings",
+  "prepTime": "PT5M",
+  "cookTime": "PT20M",
+  "totalTime": "PT25M",
+  "recipeCuisine": "Indian",
+  "recipeIngredient": [
+    "1 14-ounce can crushed tomatoes",
+    "5 cloves garlic",
+    "1 teaspoon minced fresh ginger",
+    "1 teaspoon turmeric",
+    "0.5 teaspoons cayenne pepper",
+    "1 teaspoon smoked paprika",
+    "1 teaspoon kosher salt",
+    "1 teaspoon garam masala",
+    "1 teaspoon ground cumin",
+    "1 pound boneless skinless chicken thighs",
+    "4 ounces butter, cut into cubes",
+    "4 ounces heavy cream",
+    "1 teaspoon garam masala, for finishing",
+    "0.25 cups chopped cilantro"
+  ],
+  "recipeInstructions": [
+    "Place tomatoes, garlic, ginger, turmeric, cayenne, smoked paprika, salt, 1 teaspoon garam masala, and cumin in the Instant Pot. Mix well. Place chicken thighs on top of the sauce.",
+    "Close the lid and cook on high pressure for 10 minutes. Let pressure release naturally for 10 minutes, then release any remaining pressure.",
+    "Carefully remove the chicken and set aside.",
+    "Using an immersion blender, blend the sauce until smooth.",
+    "Let the sauce cool slightly. Add butter, heavy cream, cilantro, and 1 teaspoon garam masala. Stir until well incorporated.",
+    "Reserve half the sauce for future use. Add the chicken back in and heat through. Break into smaller pieces but don't shred. Serve over rice or zucchini noodles."
+  ],
+  "tool": [
+    "Instant Pot",
+    "Immersion blender"
+  ]
+}

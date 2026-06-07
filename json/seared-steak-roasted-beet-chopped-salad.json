@@ -1,0 +1,32 @@
+{
+  "name": "Seared Steak & Roasted Beet Chopped Salad",
+  "description": "Earthy roasted beets, peppery greens, and thin-sliced grass-fed steak — dressed with a balsamic-walnut vinaigrette.",
+  "recipeIngredient": [
+    "12 ounces flank or sirloin steak, grass-fed preferred",
+    "2 small beets, roasted and cubed",
+    "2 cups mixed greens or baby spinach",
+    "1 cup radicchio, shredded",
+    "0.3 cups walnuts, roughly chopped",
+    "0.3 cups goat cheese or feta, crumbled",
+    "0.3 cups fresh mint or flat-leaf parsley",
+    "0.3 cups red onion, thinly sliced",
+    "0.5 cups radishes, thinly sliced",
+    "1 tablespoon olive oil, for the steak",
+    "1 teaspoon salt and black pepper",
+    "2 tablespoons balsamic vinegar",
+    "1 tablespoon walnut or extra-virgin olive oil",
+    "1 teaspoon honey",
+    "1 teaspoon Dijon mustard",
+    "1 pinch black pepper"
+  ],
+  "recipeInstructions": [
+    "Roast the beets: Preheat oven to 400°F. Wrap beets individually in foil and roast for 45–50 minutes until a knife slides through easily. Let cool, peel, and cube. Can be done 1–5 days ahead.",
+    "Make the dressing: Whisk together balsamic vinegar, walnut oil, honey, Dijon mustard, and black pepper in a small jar until emulsified. Taste and adjust — it should be tangy with a hint of sweetness.",
+    "Sear the steak: Pat steak dry and season generously with salt and pepper. Heat a cast-iron or heavy skillet over high heat until smoking. Add olive oil and sear steak 3–4 minutes per side for medium-rare. Remove and rest on a cutting board.",
+    "Rest and slice: Rest steak for at least 5 minutes. Slice thinly against the grain.",
+    "Assemble and serve: In a large bowl, combine mixed greens, radicchio, red onion, radishes, and mint. Add roasted beets and walnuts. Arrange steak slices on top. Scatter goat cheese over everything, drizzle with dressing, and serve."
+  ],
+  "recipeYield": "2 servings",
+  "prepTime": "PT15M",
+  "cookTime": "PT55M"
+}

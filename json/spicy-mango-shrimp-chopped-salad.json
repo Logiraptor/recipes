@@ -1,0 +1,35 @@
+{
+  "name": "Spicy Mango Shrimp Chopped Salad",
+  "description": "Chili-lime shrimp, sweet mango, creamy avocado, and a zippy ginger-lime dressing. The brightest salad of the week — comes together in under 15 minutes.",
+  "recipeIngredient": [
+    "0.8 pounds large shrimp, peeled and deveined",
+    "1 cup mango, diced",
+    "1 cup romaine lettuce, chopped",
+    "1 cup red cabbage, shredded",
+    "1 avocado, diced",
+    "0.5 cup shelled edamame",
+    "0.3 cup red onion, finely minced",
+    "1 jalapeño, minced (optional)",
+    "0.3 cup fresh cilantro, chopped",
+    "2 tablespoons toasted sesame seeds",
+    "1 teaspoon chili powder",
+    "1 teaspoon garlic powder",
+    "0.5 teaspoon salt",
+    "1 tablespoon olive oil, for cooking shrimp",
+    "2 tablespoons extra-virgin olive oil",
+    "4 tablespoons fresh lime juice, about 2 limes",
+    "1 tablespoon rice vinegar",
+    "1 teaspoon fresh ginger, grated",
+    "1 teaspoon honey",
+    "0.3 teaspoon chili flakes"
+  ],
+  "recipeInstructions": [
+    "Make the ginger-lime dressing: Whisk together extra-virgin olive oil, lime juice, rice vinegar, grated ginger, honey, and chili flakes in a small bowl or jar. Set aside.",
+    "Season the shrimp: Pat shrimp dry with a paper towel. Toss with chili powder, garlic powder, and salt until evenly coated.",
+    "Cook the shrimp: Heat olive oil in a large skillet over medium-high heat. Add shrimp in a single layer and cook 1–2 minutes per side until pink and just curled. Do not crowd the pan. Remove from heat immediately.",
+    "Build the salad base: In a large bowl, combine romaine lettuce, red cabbage, edamame, red onion, mango, cilantro, and jalapeño if using. Toss to combine.",
+    "Assemble and serve: Add shrimp to the salad. Add diced avocado last. Drizzle dressing over everything, toss gently, and finish with toasted sesame seeds. Serve right away."
+  ],
+  "totalTime": "PT15M",
+  "recipeCategory": "Salad"
+}
