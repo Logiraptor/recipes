@@ -1,0 +1,26 @@
+{
+  "name": "Simple Pan Broccolini",
+  "description": "Stupid-simple pan-seared broccolini with garlic — one skillet, five minutes of prep, tender-crisp and lightly charred. Mild enough for kids.",
+  "recipeYield": "4 servings",
+  "prepTime": "PT5M",
+  "cookTime": "PT10M",
+  "totalTime": "PT15M",
+  "tool": [
+    "large skillet"
+  ],
+  "recipeIngredient": [
+    "1 pound broccolini, trimmed",
+    "2 tablespoons olive oil",
+    "3 garlic cloves, thinly sliced",
+    "1/4 teaspoon salt",
+    "1/4 teaspoon red pepper flakes (optional)",
+    "2 tablespoons water"
+  ],
+  "recipeInstructions": [
+    "Heat the olive oil in a large skillet over medium-high heat.",
+    "Add the broccolini and salt. Cook, stirring occasionally, for 4-5 minutes until bright green and starting to char.",
+    "Add the garlic (and red pepper flakes, if using) and cook 1 minute until fragrant.",
+    "Add the water, cover, and steam 2-3 minutes until the stems are tender-crisp.",
+    "Uncover and cook off any remaining liquid. Serve immediately."
+  ]
+}
