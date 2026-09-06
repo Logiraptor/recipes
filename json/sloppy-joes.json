@@ -1,0 +1,39 @@
+{
+  "name": "Sloppy Joes",
+  "description": "Ground beef simmered in a sweet-tangy ketchup and tomato paste sauce, piled on buttered toasted hamburger buns. Straight out of a 90s weeknight dinner. Adapted from Spend With Pennies.",
+  "recipeYield": "5 servings",
+  "prepTime": "PT10M",
+  "cookTime": "PT25M",
+  "totalTime": "PT35M",
+  "recipeCategory": "Main Course",
+  "recipeCuisine": "American",
+  "keywords": "sloppy joes, ground beef, sandwich, skillet, kid-friendly",
+  "tool": [
+    "10-inch skillet"
+  ],
+  "recipeIngredient": [
+    "1 pound lean ground beef",
+    "0.5 yellow onion, finely diced",
+    "0.5 teaspoon garlic powder",
+    "0.5 green bell pepper, finely diced",
+    "0.67 cup water",
+    "0.5 cup tomato sauce",
+    "0.25 cup ketchup",
+    "3 tablespoons tomato paste",
+    "2 tablespoons brown sugar",
+    "1.5 tablespoons apple cider vinegar",
+    "1 teaspoon Worcestershire sauce",
+    "1 teaspoon yellow mustard",
+    "0.5 teaspoon salt",
+    "0.25 teaspoon black pepper",
+    "5 hamburger buns",
+    "2 tablespoons butter, for the buns"
+  ],
+  "recipeInstructions": [
+    "Cook the ground beef, onion, and garlic powder in a 10-inch skillet over medium-high heat, breaking up the meat, until no pink remains. Drain off excess fat.",
+    "Add the bell pepper, water, tomato sauce, ketchup, tomato paste, brown sugar, vinegar, Worcestershire, mustard, salt, and pepper. Stir and bring to a boil.",
+    "Reduce heat and simmer uncovered about 15 minutes, until thickened and scoopable.",
+    "Meanwhile, butter the cut sides of the buns and toast them under the broiler or in a dry skillet 2 to 3 minutes until lightly browned.",
+    "Spoon about a half cup of the meat mixture onto each bun and serve."
+  ]
+}

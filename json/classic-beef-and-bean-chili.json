@@ -1,0 +1,40 @@
+{
+  "name": "Classic Beef and Bean Chili",
+  "description": "The plain, mild, one-pot chili everybody grew up on: ground beef, two cans of beans, diced tomatoes, and tomato paste. Serve with shredded cheddar and crackers. Adapted from Budget Bytes.",
+  "recipeYield": "6 servings",
+  "prepTime": "PT10M",
+  "cookTime": "PT35M",
+  "totalTime": "PT45M",
+  "recipeCategory": "Main Course",
+  "recipeCuisine": "American",
+  "keywords": "chili, ground beef, one pot, kid-friendly, pantry",
+  "recipeIngredient": [
+    "2 tablespoons olive oil",
+    "1 yellow onion, diced",
+    "2 cloves garlic, minced",
+    "1 pound ground beef (80 to 85 percent lean)",
+    "1 can (15 ounces) kidney beans, drained",
+    "1 can (15 ounces) black beans, drained",
+    "1 can (15 ounces) diced tomatoes, with juices",
+    "1 can (6 ounces) tomato paste",
+    "1 cup water",
+    "1 tablespoon chili powder",
+    "1 teaspoon ground cumin",
+    "0.25 teaspoon cayenne pepper",
+    "0.25 teaspoon garlic powder",
+    "0.5 teaspoon onion powder",
+    "0.5 tablespoon brown sugar",
+    "1 teaspoon salt",
+    "0.5 teaspoon black pepper",
+    "1 cup shredded sharp cheddar, for serving",
+    "0.5 cup sour cream, for serving, optional"
+  ],
+  "recipeInstructions": [
+    "Heat the olive oil in a large pot over medium heat. Add the diced onion and garlic and cook until soft and translucent, about 5 minutes.",
+    "Add the ground beef and cook, breaking it up, until fully browned. Drain off excess fat if needed.",
+    "Stir in the kidney beans, black beans, diced tomatoes with their juices, tomato paste, and water.",
+    "Add the chili powder, cumin, cayenne, garlic powder, onion powder, brown sugar, salt, and pepper. Stir until the tomato paste is fully incorporated.",
+    "Cover and simmer over low heat at least 30 minutes, stirring occasionally. Add a splash of water if it gets too thick.",
+    "Taste and adjust salt. Serve hot topped with shredded cheddar and sour cream, with crackers or tortilla chips."
+  ]
+}
