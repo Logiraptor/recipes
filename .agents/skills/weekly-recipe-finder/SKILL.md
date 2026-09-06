@@ -4,8 +4,7 @@ description: >-
   Find a week of highly-rated recipes for a given ingredient or constraint,
   matched to the user's cooking comfort zone, mixing existing repo recipes with
   new ones found online (roughly 60/40 reuse vs new), with ingredients reused
-  across recipes to simplify shopping. Writes them as markdown and schema.org
-  JSON. Use when the user wants to plan a week of meals, find new recipes for
+  across recipes to simplify shopping. Writes them as schema.org Recipe JSON. Use when the user wants to plan a week of meals, find new recipes for
   ingredients they have, or build a meal plan around a protein, diet, or
   cooking method.
 ---
@@ -16,9 +15,9 @@ Find a cohesive set of highly-rated recipes for the week — built around the
 user's available ingredients and constraints, matched to their demonstrated
 cooking comfort zone, and chosen so ingredients overlap to keep the shopping
 trip simple. Recipes can come from two places: **existing recipes already in
-this repo** (`markdown/`) and **new, real recipes found online**. Aim for a mix
+this repo** (`recipes/`) and **new, real recipes found online**. Aim for a mix
 of roughly **60% reused / 40% new** when enough qualifying repo recipes exist.
-Output both markdown (in `markdown/`) and schema.org Recipe JSON (in `recipes/`).
+Output schema.org Recipe JSON in `recipes/`.
 
 This is a large, multi-step task. Use subagents to parallelize the work and
 keep the orchestrator in control.
@@ -34,7 +33,7 @@ Before starting, identify from the request:
 
 ### 1. Learn the user's comfort zone and inventory existing recipes (do this first)
 
-Read the existing recipes from `markdown/` (prioritize ones matching the
+Read the existing recipes from `recipes/` (prioritize ones matching the
 target ingredient or method) to do two things at once:
 
 1. **Build a comfort-zone profile** (table below).
@@ -103,32 +102,24 @@ Present the selection as a table (recipe, source, rating, method, protein, and
 whether it's **reused** or **new**) plus a short note on the shared-ingredient
 backbone and the reuse/new split.
 
-### 4. Write the markdown recipes
+### 4. Write the recipe JSON
 
-For **reused** recipes, the markdown already exists — leave it as-is (don't
-rewrite or duplicate it). Only write markdown for the **new** selected recipes,
-to `markdown/<Title>.md` following the existing markdown format in the repo:
-- Title line, then a one-line description (include source + rating).
-- `Servings:`, `Prep Time:`, `Cook Time:`, `Total Time:` lines.
-- `INGREDIENTS` section with `• ` bullets, natural-language quantities.
-- `STEPS` section with numbered steps.
-- Optional `NOTES` section (substitutions, kid-friendly tips, greens add-ins).
+For **reused** recipes, the JSON already exists in `recipes/` — verify it and
+leave it as-is (don't rewrite or duplicate it).
 
-### 5. Convert to JSON (subagent)
+For each **new** selected recipe, capture the researched recipe as text/markdown
+(source + rating, servings, times, ingredients, numbered steps) and delegate to
+the `recipe-json-converter` subagent (or skill) to write schema.org Recipe JSON
+to `recipes/<slug>.json`, following that skill's conventions (kebab-case
+filenames, no "pieces" unit, ISO 8601 durations, `tool`/`recipeCuisine` where
+clear). Keep the source URL and rating in `description`.
 
-Reused recipes should already have JSON in `recipes/` — verify it exists and skip
-re-converting them. Delegate to the `recipe-json-converter` subagent (or skill)
-to convert only the **new** markdown files into schema.org Recipe JSON in
-`recipes/`, following that
-skill's conventions (kebab-case filenames, no "pieces" unit, ISO 8601 durations,
-`tool`/`recipeCuisine` where clear).
-
-### 6. Verify
+### 5. Verify
 
 - Confirm every JSON file for **new** recipes is valid (e.g.,
   `python3 -c "import json; json.load(...)"`).
-- Confirm each **reused** recipe has both its markdown and JSON already present.
-- Confirm markdown and JSON counts match across the full weekly set.
+- Confirm each **reused** recipe already has JSON in `recipes/`.
+- Run `./schema/validate.sh` and confirm the JSON count matches the weekly set.
 - Report the final table (marking reused vs new), the reuse/new split, and the
   shared-ingredient shopping summary.
 
@@ -136,7 +127,7 @@ skill's conventions (kebab-case filenames, no "pieces" unit, ISO 8601 durations,
 
 - **Never invent recipes.** Every *new* recipe must trace to a real, working URL
   with a verifiable rating; reused recipes must come from the repo's existing
-  `markdown/` files. If research can't find enough qualifying recipes, say so
+  `recipes/` files. If research can't find enough qualifying recipes, say so
   rather than filling the gap with made-up dishes.
 - **Aim for ~60% reuse / 40% new** when enough existing repo recipes qualify.
   Reuse is a feature, not a fallback — it favors recipes the user already knows

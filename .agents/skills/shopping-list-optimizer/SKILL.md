@@ -3,7 +3,7 @@ name: shopping-list-optimizer
 description: >-
   Analyze a meal plan's shopping list against source recipe files and recommend
   ingredient substitutions that reduce the total number of distinct items to buy.
-  Then apply the chosen substitutions to the source recipe markdown files. Use
+  Then apply the chosen substitutions to the source recipe JSON files. Use
   when the user wants to simplify a shopping list, reduce ingredient variety,
   consolidate a meal plan, or find recipe substitutions.
 ---
@@ -11,7 +11,7 @@ description: >-
 # Shopping List Optimizer
 
 Cross-reference a weekly meal plan's ingredients against the source recipes in
-`markdown/` to find substitutions that shrink the shopping list, then apply them.
+`recipes/` to find substitutions that shrink the shopping list, then apply them.
 
 ## Workflow
 
@@ -19,7 +19,7 @@ Cross-reference a weekly meal plan's ingredients against the source recipes in
 
 - Read `shopping.md` (or whatever shopping list the user points to).
 - Identify every source recipe referenced in the meal plan.
-- Read each source recipe from `markdown/`.
+- Read each source recipe from `recipes/<slug>.json`.
 
 ### 2. Analyze for substitution opportunities
 
@@ -46,10 +46,9 @@ For each substitution, explain:
 ### 4. Apply changes
 
 When the user approves:
-- Edit each affected recipe file in `markdown/`.
-- Update **both** the INGREDIENTS list and the STEPS text (ingredients are often repeated inline in steps).
-- Use `replace_all: true` when the ingredient name appears in both sections.
-- Verify each file after editing.
+- Edit each affected recipe file in `recipes/`.
+- Update **both** `recipeIngredient` and the `recipeInstructions` text (ingredients are often repeated inline in steps).
+- Verify each file after editing, then run `./schema/validate.sh`.
 
 ## Guidelines
 

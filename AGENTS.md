@@ -28,7 +28,6 @@ This is a Go-based project that interacts with the Mealie recipe management syst
   vets every data file and checks slug/filename/cross-reference integrity.
   Run `./schema/validate.sh` after editing any data file.
   Requires `cue` (`go install cuelang.org/go/cmd/cue@latest`) and `jq`.
-- `markdown/` - Contains recipe files in Markdown format
 - `mealie/` - Contains Mealie API client code (generated from OpenAPI spec)
 - `cmd/trmnl-recipe/` - Source code for the TRMNL recipe webhook tool
 - `cmd/mealplan-ingredients/` - Source code for the meal plan ingredients tool 
