@@ -2,6 +2,13 @@
 
 This document provides essential information for agents working in this codebase to understand the project structure, commands, and patterns.
 
+## Storage Model
+
+The git repo itself is the database: `recipes/` and `meal-plans/` are the
+source of truth, validated by the CUE schemas in `schema/`. Mealie is being
+phased out; the tools under `cmd/` still talk to it, but new workflows should
+read and write these directories directly.
+
 ## Project Overview
 
 This is a Go-based project that interacts with the Mealie recipe management system. It includes three primary tools:
@@ -12,7 +19,15 @@ This is a Go-based project that interacts with the Mealie recipe management syst
 ## Code Organization
 
 ### Directory Structure
-- `json/` - Contains recipe files in JSON format (schema.org Recipe format)
+- `recipes/` - Recipe files in JSON format (schema.org Recipe subset), one per
+  file. The filename (minus `.json`) is the recipe's **slug**.
+- `meal-plans/` - Weekly meal plans in JSON, one file per week named after the
+  week's start date (Sunday), e.g. `meal-plans/2025-06-01.json`. Entries
+  reference recipes by slug.
+- `schema/` - CUE schemas (`#Recipe`, `#MealPlan`) plus `validate.sh`, which
+  vets every data file and checks slug/filename/cross-reference integrity.
+  Run `./schema/validate.sh` after editing any data file.
+  Requires `cue` (`go install cuelang.org/go/cmd/cue@latest`) and `jq`.
 - `markdown/` - Contains recipe files in Markdown format
 - `mealie/` - Contains Mealie API client code (generated from OpenAPI spec)
 - `cmd/trmnl-recipe/` - Source code for the TRMNL recipe webhook tool

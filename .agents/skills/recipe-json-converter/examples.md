@@ -23,7 +23,7 @@ STEPS
 Preferred output path:
 
 ```text
-json/red-beans-and-rice-with-andouille-sausage.json
+recipes/red-beans-and-rice-with-andouille-sausage.json
 ```
 
 ```json
@@ -68,7 +68,7 @@ Drop "pieces" — it is not a cooking unit. Write countable items as `"<qty> <fo
 ## Notes
 
 - The output stays as plain JSON.
-- The generated file should be written into the repo's `json/` directory.
+- The generated file should be written into the repo's `recipes/` directory.
 - `recipeCuisine` is included here because the description explicitly identifies the dish as Louisiana.
 - If the source did not clearly support `recipeCuisine`, omit it.
 - Ingredient strings should be natural language that Mealie's NLP parser can decompose into quantity, unit, and food.

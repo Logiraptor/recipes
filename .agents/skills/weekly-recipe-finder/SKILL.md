@@ -18,7 +18,7 @@ cooking comfort zone, and chosen so ingredients overlap to keep the shopping
 trip simple. Recipes can come from two places: **existing recipes already in
 this repo** (`markdown/`) and **new, real recipes found online**. Aim for a mix
 of roughly **60% reused / 40% new** when enough qualifying repo recipes exist.
-Output both markdown (in `markdown/`) and schema.org Recipe JSON (in `json/`).
+Output both markdown (in `markdown/`) and schema.org Recipe JSON (in `recipes/`).
 
 This is a large, multi-step task. Use subagents to parallelize the work and
 keep the orchestrator in control.
@@ -116,10 +116,10 @@ to `markdown/<Title>.md` following the existing markdown format in the repo:
 
 ### 5. Convert to JSON (subagent)
 
-Reused recipes should already have JSON in `json/` — verify it exists and skip
+Reused recipes should already have JSON in `recipes/` — verify it exists and skip
 re-converting them. Delegate to the `recipe-json-converter` subagent (or skill)
 to convert only the **new** markdown files into schema.org Recipe JSON in
-`json/`, following that
+`recipes/`, following that
 skill's conventions (kebab-case filenames, no "pieces" unit, ISO 8601 durations,
 `tool`/`recipeCuisine` where clear).
 

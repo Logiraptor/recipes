@@ -12,7 +12,7 @@ Turn a recipe-like text file into a plain JSON object that uses `schema.org/Reci
 Default behavior:
 - Output plain JSON, not JSON-LD
 - Normalize loose recipe text before emitting JSON
-- Write the final JSON to the repo's `json/` directory so it can be tracked
+- Write the final JSON to the repo's `recipes/` directory so it can be tracked
 - Prefer explicit facts from the source over guessed metadata
 
 ## When To Use
@@ -24,12 +24,12 @@ Use this skill when:
 
 ## Output Contract
 
-Default output target: write the generated file into `json/`.
+Default output target: write the generated file into `recipes/`.
 
-If the source file is `Red Beans.md`, prefer an output path like `json/red-beans.json`.
+If the source file is `Red Beans.md`, prefer an output path like `recipes/red-beans.json`.
 
 Unless the user asks otherwise:
-- Create or update the JSON file in `json/`
+- Create or update the JSON file in `recipes/`
 - Return the JSON content or a short confirmation, depending on the user's request
 - Do not place generated recipe JSON beside the source markdown file
 
@@ -63,7 +63,7 @@ Add other `schema.org/Recipe` fields only when they are explicit or strongly sup
 2. Identify the title, summary, and any labeled sections.
 3. Map source content into `Recipe` fields.
 4. Normalize wording and structure without changing the recipe's meaning.
-5. Write the valid JSON object to `json/<normalized-name>.json`.
+5. Write the valid JSON object to `recipes/<normalized-name>.json`.
 6. Emit no extra commentary unless the user asks for explanation.
 
 ## Field Mapping
@@ -138,7 +138,7 @@ Before returning the JSON:
 - Ensure arrays contain clean strings with no bullet markers
 - Ensure JSON is syntactically valid
 - Ensure every included optional field is supported by the source text
-- Ensure the file is written inside `json/`
+- Ensure the file is written inside `recipes/`
 
 ## Example
 
