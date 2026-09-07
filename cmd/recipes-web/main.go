@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -91,6 +92,12 @@ type server struct {
 	store *recipedata.Store
 }
 
+// recipeCard is an index-page recipe plus how many times it's been cooked.
+type recipeCard struct {
+	*recipedata.Recipe
+	Made int
+}
+
 func (s *server) index(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		s.fail(w, r, http.StatusNotFound, errors.New("not found"))
@@ -105,9 +112,22 @@ func (s *server) index(w http.ResponseWriter, r *http.Request) {
 	if query != "" {
 		recipes = filter(recipes, query)
 	}
+	counts, err := s.store.MadeCounts(time.Now())
+	if err != nil {
+		s.fail(w, r, http.StatusInternalServerError, err)
+		return
+	}
+	// Most-cooked first; recipes come in name order, so the stable sort keeps
+	// alphabetical order within a count.
+	cards := make([]recipeCard, 0, len(recipes))
+	for _, rec := range recipes {
+		cards = append(cards, recipeCard{Recipe: rec, Made: counts[rec.Slug]})
+	}
+	sort.SliceStable(cards, func(i, j int) bool { return cards[i].Made > cards[j].Made })
+
 	s.render(w, r, "index.html", map[string]any{
 		"Title":   "Recipes",
-		"Recipes": recipes,
+		"Recipes": cards,
 		"Query":   query,
 	})
 }

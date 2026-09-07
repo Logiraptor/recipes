@@ -2,7 +2,7 @@
 <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
   <div>
     <h1 class="text-3xl font-bold">All recipes</h1>
-    <p class="text-base-content/60">{{len .Recipes}} recipe{{if ne (len .Recipes) 1}}s{{end}}{{if .Query}} matching “{{.Query}}”{{end}}</p>
+    <p class="text-base-content/60">{{len .Recipes}} recipe{{if ne (len .Recipes) 1}}s{{end}}{{if .Query}} matching “{{.Query}}”{{end}}, most cooked first</p>
   </div>
   <form method="get" action="/" class="join">
     <input type="search" name="q" value="{{.Query}}" placeholder="Search name or ingredient" class="input input-bordered join-item w-64">
@@ -24,6 +24,7 @@
         {{with .RecipeCategory}}<span class="badge badge-primary badge-sm">{{.}}</span>{{end}}
         {{with .RecipeCuisine}}<span class="badge badge-ghost badge-sm">{{.}}</span>{{end}}
         {{with .TotalTime}}<span class="badge badge-outline badge-sm">{{duration .}}</span>{{end}}
+        {{if .Made}}<span class="badge badge-secondary badge-sm">Made {{.Made}}&times;</span>{{else}}<span class="badge badge-ghost badge-sm">Never made</span>{{end}}
       </div>
     </div>
   </a>

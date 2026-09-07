@@ -131,6 +131,29 @@ func (s *Store) MealPlan(weekStart string) (*MealPlan, error) {
 	return &p, nil
 }
 
+// MadeCounts returns, per recipe slug, how many meal-plan entries reference it
+// on a date on or before asOf. Future plan entries don't count as "made".
+func (s *Store) MadeCounts(asOf time.Time) (map[string]int, error) {
+	weeks, err := s.Weeks()
+	if err != nil {
+		return nil, err
+	}
+	cutoff := asOf.Format(DateLayout)
+	counts := make(map[string]int)
+	for _, week := range weeks {
+		plan, err := s.MealPlan(week)
+		if err != nil {
+			return nil, err
+		}
+		for _, e := range plan.Entries {
+			if e.Recipe != "" && e.Date <= cutoff {
+				counts[e.Recipe]++
+			}
+		}
+	}
+	return counts, nil
+}
+
 // WeekStart returns the Sunday on or before t, formatted YYYY-MM-DD.
 func WeekStart(t time.Time) string {
 	return t.AddDate(0, 0, -int(t.Weekday())).Format(DateLayout)
