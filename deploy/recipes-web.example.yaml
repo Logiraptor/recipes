@@ -1,0 +1,100 @@
+# Example only. recipes-web with a git-sync sidecar, so publishing a recipe is
+# a `git push` rather than an image rebuild.
+#
+# git-sync clones this repo into an emptyDir every --period and atomically
+# repoints /data/current at the new checkout. recipes-web reads from disk on
+# every request, so the next page load serves the new data.
+#
+# The repo is public, so the clone needs no credentials. For a private repo,
+# add a read-only deploy key as a Secret and pass --ssh-key-file.
+#
+# If the GHCR package is private, add imagePullSecrets to the pod spec.
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recipes-web
+  namespace: recipes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recipes-web
+  template:
+    metadata:
+      labels:
+        app: recipes-web
+    spec:
+      volumes:
+        - name: data
+          emptyDir: {}
+      # Native sidecar (requires Kubernetes 1.29+): the always-restarting init
+      # container starts before recipes-web and is torn down after it, so the
+      # data is on disk before the first readiness probe.
+      initContainers:
+        - name: git-sync
+          image: registry.k8s.io/git-sync/git-sync:v4.7.1
+          restartPolicy: Always
+          args:
+            - --repo=https://github.com/Logiraptor/recipes.git
+            - --ref=main
+            - --depth=1
+            - --root=/data
+            - --link=current
+            - --period=60s
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+      containers:
+        - name: recipes-web
+          image: ghcr.io/logiraptor/recipes-web:main
+          imagePullPolicy: Always
+          env:
+            # /data/current is the symlink git-sync swaps on each new commit.
+            - name: RECIPES_ROOT
+              value: /data/current
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 3
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 20
+          volumeMounts:
+            - name: data
+              mountPath: /data
+              readOnly: true
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: recipes-web
+  namespace: recipes
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app: recipes-web

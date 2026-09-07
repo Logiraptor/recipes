@@ -35,7 +35,8 @@ A Go project for managing recipes and weekly meal plans as JSON files, with thre
 - `cmd/recipes-web/` - Web server; `templates/*.html` are embedded via `embed.FS`.
   Styling comes from daisyUI (MIT) on top of Tailwind, loaded from a CDN, so
   there is no CSS build step and no hand-rolled design system.
-- `deploy/` - Deployment configuration files
+- `deploy/` - Example deployment manifests. The live cluster config lives in the
+  separate `picluster-manifests` repo (`apps/recipes-web/`, `apps/trmnl-recipe/`).
 
 ## Build and Run
 
@@ -61,8 +62,16 @@ docker build -f Dockerfile.web -t recipes-web .
 docker run --rm -p 8080:8080 recipes-web
 ```
 
-The image bakes `recipes/` and `meal-plans/` into `/data` and sets
-`RECIPES_ROOT=/data`, so a rebuild is how new recipes reach the device.
+The `trmnl-recipe` image (`Dockerfile`) bakes `recipes/` and `meal-plans/` into
+`/data` and sets `RECIPES_ROOT=/data`, so a rebuild is how new recipes reach the
+device.
+
+The `recipes-web` image (`Dockerfile.web`) contains **no data**. The data is
+mounted at runtime by a git-sync sidecar that clones this repo and repoints
+`/data/current` at each new commit; the deployment sets
+`RECIPES_ROOT=/data/current`. See `deploy/recipes-web.example.yaml`. Locally the
+server still auto-detects the repo root, so `go run ./cmd/recipes-web` is
+unchanged.
 
 ## Key Components and Functionality
 
@@ -137,8 +146,10 @@ The trmnl-recipe tool includes truncation logic for recipes that exceed the 2000
    rendering and uses Liquid-like syntax for variable substitution. Its merge
    variable names must stay in sync with `mergeVariables` in `main.go`.
 
-6. **Deploys are data deploys**: since the data is baked into the image, editing
-   `recipes/` or `meal-plans/` requires an image rebuild to take effect on device.
+6. **Two different data delivery paths**: `recipes-web` picks up edits to
+   `recipes/` or `meal-plans/` within a minute of `git push` (git-sync sidecar,
+   no rebuild). `trmnl-recipe` still has the data baked in, so a push to the
+   TRMNL device needs an image rebuild.
 
 ## Testing Approach
 

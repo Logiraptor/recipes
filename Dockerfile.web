@@ -17,10 +17,9 @@ FROM gcr.io/distroless/static-debian12:nonroot
 
 COPY --from=build /out/recipes-web /recipes-web
 
-# The repo is the database: bake the data in and point the server at it.
-COPY recipes /data/recipes
-COPY meal-plans /data/meal-plans
-ENV RECIPES_ROOT=/data
+# No data is baked in: the repo is the database, and it is mounted at runtime
+# by a git-sync sidecar (see deploy/recipes-web.example.yaml). The deployment
+# sets RECIPES_ROOT to the synced working tree.
 ENV ADDR=:8080
 
 EXPOSE 8080
