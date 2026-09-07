@@ -112,7 +112,7 @@ Add other `schema.org/Recipe` fields only when they are explicit or strongly sup
 
 ### Ingredient Normalization
 
-Ingredient strings are later parsed by Mealie's NLP ingredient parser, which expects natural-language strings in the form `"<quantity> <unit> <food>, <note>"`. Write ingredients so the parser can extract quantity, unit, and food correctly:
+Ingredient strings are consumed as plain text by the tools in `cmd/` and read directly by humans, so keep them in the consistent natural-language form `"<quantity> <unit> <food>, <note>"`. Write ingredients so the parser can extract quantity, unit, and food correctly:
 
 - Use recognized unit names: teaspoon, tablespoon, cup, ounce, pound, gram, kilogram, liter, milliliter, fluid ounce, pint, quart, gallon, pinch, dash, splash, can, bunch, clove, head, serving, sprig, pack.
 - For countable items with no measurement unit (eggs, sausage links, bread slices), omit any unit — just write the quantity followed by the food: `"6 large eggs"`, `"4 andouille sausage links"`, `"2 green onions, sliced"`.

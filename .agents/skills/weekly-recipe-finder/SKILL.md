@@ -139,4 +139,5 @@ clear). Keep the source URL and rating in `description`.
   never used unless they ask.
 - Clean up `research-*.md` scratch files at the end, or leave them if the user
   may want to review the dropped candidates.
-- Offer follow-ups: a quantity-merged shopping list, or syncing to Mealie.
+- Offer follow-ups: a quantity-merged shopping list, or adding the recipes to
+  a `meal-plans/` file for the week.

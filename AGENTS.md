@@ -5,16 +5,15 @@ This document provides essential information for agents working in this codebase
 ## Storage Model
 
 The git repo itself is the database: `recipes/` and `meal-plans/` are the
-source of truth, validated by the CUE schemas in `schema/`. Mealie is being
-phased out; the tools under `cmd/` still talk to it, but new workflows should
-read and write these directories directly.
+source of truth, validated by the CUE schemas in `schema/`. There is no
+external recipe service — the tools under `cmd/` read these directories
+directly, over the filesystem, with no credentials or network access.
 
 ## Project Overview
 
-This is a Go-based project that interacts with the Mealie recipe management system. It includes three primary tools:
-1. `recipes` - Main application for syncing JSON recipe files to Mealie
-2. `trmnl-recipe` - A command-line tool that fetches today's meal plan from Mealie and sends it to a TRMNL webhook
-3. `mealplan-ingredients` - A command-line tool that generates a combined shopping list from the weekly meal plan
+A Go project for managing recipes and weekly meal plans as JSON files, with two tools:
+1. `trmnl-recipe` - Picks the recipe for the current meal slot and sends it to a TRMNL webhook
+2. `mealplan-ingredients` - Prints the week's meal plan and a combined shopping list
 
 ## Code Organization
 
@@ -28,133 +27,116 @@ This is a Go-based project that interacts with the Mealie recipe management syst
   vets every data file and checks slug/filename/cross-reference integrity.
   Run `./schema/validate.sh` after editing any data file.
   Requires `cue` (`go install cuelang.org/go/cmd/cue@latest`) and `jq`.
-- `mealie/` - Contains Mealie API client code (generated from OpenAPI spec)
+- `internal/recipedata/` - Shared loader for `recipes/` and `meal-plans/`.
+  Both commands go through it; add new data access here, not in `cmd/`.
 - `cmd/trmnl-recipe/` - Source code for the TRMNL recipe webhook tool
-- `cmd/mealplan-ingredients/` - Source code for the meal plan ingredients tool 
+- `cmd/mealplan-ingredients/` - Source code for the meal plan ingredients tool
 - `deploy/` - Deployment configuration files
 
-### Go Modules
-The project uses Go modules with dependencies managed by `go.mod`. It includes:
-- `github.com/oapi-codegen/runtime` for OpenAPI code generation
-- Mealie API client generated from OpenAPI specification
+## Build and Run
 
-## Build and Deployment
-
-### Build Commands
 ```bash
-# Build the main application
-go build -o recipes ./main.go
+# Build both commands
+go build ./...
 
-# Build the trmnl-recipe command
-go build -o trmnl-recipe ./cmd/trmnl-recipe/main.go
-
-# Build the mealplan-ingredients command
-go build -o mealplan-ingredients ./cmd/mealplan-ingredients/main.go
+# Run the shopping list for the current week (or a specific week)
+go run ./cmd/mealplan-ingredients
+go run ./cmd/mealplan-ingredients -week 2025-06-01
 
 # Build with CGO disabled for smaller binaries (as in Dockerfile)
 CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o trmnl-recipe ./cmd/trmnl-recipe
 ```
 
 ### Docker Build
-The project includes a Dockerfile for containerized deployment:
 ```bash
 docker build -t trmnl-recipe .
 ```
 
+The image bakes `recipes/` and `meal-plans/` into `/data` and sets
+`RECIPES_ROOT=/data`, so a rebuild is how new recipes reach the device.
+
 ## Key Components and Functionality
 
-### Main Application (`recipes`)
-- Syncs JSON recipe files to Mealie via the API
-- Supports syncing single files or directories of files
-- Uses the Mealie API client to create/update recipes
-- Processes recipe ingredients through Mealie's NLP parser to normalize them
+### Data Loader (`internal/recipedata`)
+- `Open()` finds the data root: `RECIPES_ROOT` if set, otherwise the nearest
+  ancestor directory containing both `recipes/` and `meal-plans/`
+- `Store.Recipe(slug)` and `Store.MealPlan(weekStart)` load and decode files;
+  a missing file surfaces as `fs.ErrNotExist`
+- `WeekStart(t)` returns the Sunday on or before `t`
 
 ### TRMNL Recipe Tool (`trmnl-recipe`)
-- Fetches today's meal plan from Mealie API
-- Selects the appropriate meal type (breakfast, lunch, or dinner) based on current time
+- Loads this week's meal plan and picks today's entry for the current meal slot
+- Selects the meal type (breakfast, lunch, or dinner) based on current time
 - Formats recipe data for TRMNL webhook payload using a template file
 - Truncates large payloads to fit within TRMNL's 2000-byte limit
 - Sends formatted recipe data to configured webhook URL
+- A missing meal-plan file is not an error: it pushes the empty state
 
 ### Mealplan Ingredients Tool (`mealplan-ingredients`)
-- Fetches the weekly meal plan from Mealie API
-- Generates a combined shopping list from all ingredients in the meal plan
-- Groups ingredients by recipe and formats them for display
-
-### Mealie API Integration
-The project uses an OpenAPI client that's generated from the Mealie API specification:
-- `mealie/client.gen.go` is auto-generated code
-- `mealie/oapi-codegen.yaml` configures the generation
-- The client is used for all API interactions with Mealie
+- Loads the weekly meal plan and every recipe it references
+- Prints the plan, per-recipe ingredients, and a combined shopping list
+- Skips duplicate recipes so each is listed once
 
 ## Key Patterns and Conventions
 
 ### File Handling
-- Recipe files are expected to be valid JSON following the schema.org Recipe specification
-- Files can be processed individually or as a directory of files
-- File names are used to determine recipe names for search operations
+- Recipe files must be valid JSON matching `schema/recipe.cue`
+- Ingredients are plain natural-language strings, quantity first
+  (`"2 tablespoons olive oil"`); no structured quantity/unit/food objects
+- Instructions are plain strings, one step per entry
 
 ### Environment Variables
-All tools require specific environment variables:
-- `MEALIE_BASE` - Base URL for the Mealie instance (required)
-- `MEALIE_TOKEN` - Bearer token for Mealie API authentication
-- `TRMNL_WEBHOOK_URL` - URL to send the TRMNL webhook payload (only for trmnl-recipe)
+- `RECIPES_ROOT` - Data root override (optional; both tools auto-detect it
+  by walking up from the working directory)
+- `TRMNL_WEBHOOK_URL` - URL to send the TRMNL webhook payload (trmnl-recipe only)
 
 ### Error Handling
-- All tools exit with non-zero status codes on failure
-- Error messages are written to stderr for debugging
-- HTTP error responses from Mealie API are logged with status codes and response bodies
-
-### Ingredient Processing
-- Ingredients are parsed through Mealie's NLP ingredient parser for normalization (in recipes tool)
-- Special handling to avoid sending invalid food/unit references that could cause 500 errors
+- Tools exit with non-zero status codes on failure
+- Error messages are written to stderr; `trmnl-recipe` uses structured `slog`
 
 ### Payload Truncation
-The trmnl-recipe tool includes sophisticated payload truncation logic to handle cases where the recipe data exceeds the 2000-byte limit for TRMNL webhooks:
+The trmnl-recipe tool includes truncation logic for recipes that exceed the 2000-byte TRMNL limit:
 1. Instructions are truncated first
 2. Ingredients are truncated second
 3. Additional fields (TotalTime, PrepTime, RecipeYield) are removed as needed
-4. If still over limit, instructions are completely removed and a message is sent instead
-
-## Testing Approach
-
-There are no explicit test files in the current view of the codebase, but the tools:
-1. Can be tested by running them with actual Mealie instances
-2. Have unit test-like logic in their error handling and validation
-3. Are designed to work with the Mealie API through direct HTTP calls
+4. If still over limit, instructions are removed entirely and a message is sent instead
 
 ## Important Gotchas and Non-Obvious Patterns
 
-1. **Recipe File Format**: Recipe files must be valid JSON following the schema.org Recipe specification with a "name" field to be processed.
+1. **Data root discovery**: Running a tool from outside the repo fails unless
+   `RECIPES_ROOT` is set. In the container it is always `/data`.
 
-2. **Ingredient Parsing**: The recipes tool leverages Mealie's NLP ingredient parser for normalization, but has special handling to avoid sending invalid food/unit references that could cause 500 errors.
+2. **Filename is the slug**: `meal-plans/` entries reference recipes by
+   basename. Renaming a recipe file breaks the plans that reference it —
+   `./schema/validate.sh` catches this.
 
-3. **Payload Size Management**: The trmnl-recipe tool has a complex truncation strategy that prioritizes sending key recipe information while ensuring the payload fits within TRMNL limits.
+3. **Week files are Sunday-anchored**: `meal-plans/<sunday>.json`, and
+   `weekStart` inside the file must match the filename.
 
-4. **API Rate Limiting**: The tools make direct HTTP calls to the Mealie API, so they don't include any built-in rate limiting or retry logic.
-
-5. **Generated Client Code**: The `mealie/client.gen.go` file is auto-generated from the OpenAPI spec and should not be modified directly.
-
-6. **Time-Based Meal Selection**: The trmnl-recipe tool uses time-based logic to determine meal type:
+4. **Time-Based Meal Selection**: trmnl-recipe uses time-based logic:
    - Breakfast: 5 AM - 10:59 AM
-   - Lunch: 11 AM - 1:59 PM  
+   - Lunch: 11 AM - 1:59 PM
    - Dinner: 2 PM and later
 
-7. **Multiple Meal Plan Formats**: The trmnl-recipe tool can handle both array-based and paginated meal plan responses from the Mealie API.
+5. **Template-Based Output**: `trmnl-template.html` defines the TRMNL
+   rendering and uses Liquid-like syntax for variable substitution. Its merge
+   variable names must stay in sync with `mergeVariables` in `main.go`.
 
-8. **Template-Based Output**: The trmnl-recipe tool uses a template file (`trmnl-template.html`) that defines the formatting of the TRMNL webhook payload. The template uses a Liquid-like syntax for variable substitution.
+6. **Deploys are data deploys**: since the data is baked into the image, editing
+   `recipes/` or `meal-plans/` requires an image rebuild to take effect on device.
 
-9. **Weekly Meal Plan Processing**: The mealplan-ingredients tool fetches a full weekly meal plan and generates combined shopping lists across all recipes.
+## Testing Approach
 
-10. **Week Start Calculation**: The mealplan-ingredients tool calculates the current week's start date based on the current day, assuming Sunday as the first day of the week.
-
-11. **Duplicate Recipe Handling**: The mealplan-ingredients tool avoids duplicate processing of the same recipe by tracking seen slugs.
+There are no test files yet. The tools can be exercised locally:
+`go run ./cmd/mealplan-ingredients -week <date>`, or `trmnl-recipe` with
+`TRMNL_WEBHOOK_URL` pointed at a local HTTP server.
 
 ## Deployment
 
-The project includes a Dockerfile that:
-1. Builds the application with CGO disabled for smaller binaries
-2. Uses a distroless base image to minimize attack surface
-3. Sets up the binary as the entrypoint
+The Dockerfile:
+1. Builds `trmnl-recipe` with CGO disabled for a small static binary
+2. Copies `recipes/` and `meal-plans/` into `/data`
+3. Uses a distroless base image to minimize attack surface
 
-Deployment configuration examples are in `deploy/` directory.
+`deploy/trmnl-recipe-cronjob.example.yaml` runs it as a CronJob; the only
+secret it needs is `TRMNL_WEBHOOK_URL`.

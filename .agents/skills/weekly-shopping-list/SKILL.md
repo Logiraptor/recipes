@@ -1,7 +1,7 @@
 ---
 name: weekly-shopping-list
 description: >-
-  Fetch the weekly meal plan from Mealie, combine duplicate ingredients by
+  Read the weekly meal plan from meal-plans/, combine duplicate ingredients by
   adding quantities, and sync the consolidated shopping list to Apple Reminders.
   Use when the user wants to generate a shopping list, sync ingredients to
   Reminders, or prepare for grocery shopping.
@@ -17,7 +17,7 @@ each item to the Apple Reminders "Shopping" list.
 ### 1. Fetch raw ingredients
 
 ```bash
-direnv exec . go run ./cmd/mealplan-ingredients
+go run ./cmd/mealplan-ingredients
 ```
 
 This prints each recipe's ingredients and an uncombined shopping list.
@@ -73,6 +73,8 @@ Batch the create calls in parallel groups of ~10 for speed.
 
 ## Notes
 
-- The `mealplan-ingredients` tool requires `MEALIE_BASE` and `MEALIE_TOKEN` env vars, which direnv loads from `.envrc`.
+- `mealplan-ingredients` reads `meal-plans/` and `recipes/` from the repo; no
+  credentials or network access needed. Pass `-week YYYY-MM-DD` to target a
+  week other than the current one.
 - The Apple Reminders MCP server is `project-0-recipes-apple-reminders` with tool `reminders_tasks`.
 - The target list name is "Shopping" (case-sensitive).
