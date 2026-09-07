@@ -1,42 +1,55 @@
 {{define "content"}}
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+<div class="flex flex-wrap items-center justify-between gap-3">
   <div>
     <h1 class="text-3xl font-bold">Meal plan</h1>
     <p class="text-base-content/60">Week of {{prettyDate .Week}}</p>
   </div>
-  <form method="get" action="/plan" class="join">
-    <select name="week" class="select select-bordered join-item">
-      {{range .Weeks}}<option value="{{.}}" {{if eq . $.Week}}selected{{end}}>{{prettyDate .}}</option>{{end}}
-    </select>
-    <button class="btn btn-primary join-item" type="submit">Go</button>
-  </form>
+  <div class="join w-full sm:w-auto">
+    {{if .Prev}}<a class="btn btn-sm join-item h-10" href="/plan?week={{.Prev}}" aria-label="Previous week">‹</a>
+    {{else}}<span class="btn btn-sm join-item btn-disabled h-10" aria-hidden="true">‹</span>{{end}}
+    <form method="get" action="/plan" class="join-item flex min-w-0 flex-1">
+      <select name="week" class="select select-bordered join-item h-10 w-full min-w-0 rounded-none"
+              aria-label="Choose week" onchange="this.form.submit()">
+        {{range .Weeks}}<option value="{{.}}" {{if eq . $.Week}}selected{{end}}>{{prettyDate .}}</option>{{end}}
+      </select>
+      <noscript><button class="btn btn-sm h-10" type="submit">Go</button></noscript>
+    </form>
+    {{if .Next}}<a class="btn btn-sm join-item h-10" href="/plan?week={{.Next}}" aria-label="Next week">›</a>
+    {{else}}<span class="btn btn-sm join-item btn-disabled h-10" aria-hidden="true">›</span>{{end}}
+  </div>
 </div>
 
 {{if not .Plan}}
-  <div class="alert alert-warning">No meal plan file for {{.Week}} yet.</div>
+  <div class="alert alert-warning mt-6">No meal plan file for {{.Week}} yet.</div>
 {{else}}
-  {{with .Plan.Notes}}<div class="alert mb-6">{{.}}</div>{{end}}
-  <div class="grid gap-4 sm:grid-cols-2">
+  {{with .Plan.Notes}}<div class="alert mt-6">{{.}}</div>{{end}}
+  <ul class="mt-6 flex flex-col gap-3">
     {{range .Slots}}
-    <div class="card bg-base-100 shadow-sm">
-      <div class="card-body">
-        <div class="flex items-center justify-between">
-          <h2 class="card-title text-base">{{weekday .Date}}</h2>
-          <span class="badge badge-secondary badge-sm">{{title .Meal}}</span>
+    <li class="card bg-base-100 shadow-sm {{if eq .Date today}}ring-2 ring-primary{{end}}">
+      <div class="card-body flex-row flex-wrap items-baseline gap-x-4 gap-y-2 p-4">
+        <div class="w-28 shrink-0">
+          <p class="font-semibold">{{weekday .Date}}</p>
+          <p class="text-xs uppercase tracking-wide text-base-content/50">
+            {{title .Meal}}{{if eq .Date today}} · today{{end}}
+          </p>
         </div>
-        {{if .Recipe}}
-          <a href="/recipes/{{.Recipe.Slug}}" class="link link-primary font-medium">{{.Recipe.Name}}</a>
-          {{with .Recipe.Description}}<p class="line-clamp-2 text-sm text-base-content/70">{{.}}</p>{{end}}
-        {{else}}
-          <p class="font-medium">{{.Label}}</p>
-        {{end}}
-        <div class="mt-1 flex flex-wrap gap-1">
-          {{if .Servings}}<span class="badge badge-outline badge-sm">{{.Servings}} servings</span>{{end}}
+        <div class="min-w-0 flex-1">
+          {{if .Recipe}}
+            <a href="/recipes/{{.Recipe.Slug}}" class="link-hover font-medium text-primary">{{.Recipe.Name}}</a>
+            <p class="flex flex-wrap gap-x-3 text-xs text-base-content/60">
+              {{with .Recipe.TotalTime}}<span>🕒 {{duration .}}</span>{{end}}
+              <span>{{len .Recipe.RecipeIngredient}} ingredients</span>
+              {{if .Servings}}<span>{{.Servings}} servings</span>{{end}}
+            </p>
+          {{else}}
+            <p class="font-medium">{{.Label}}</p>
+            {{if .Servings}}<p class="text-xs text-base-content/60">{{.Servings}} servings</p>{{end}}
+          {{end}}
+          {{with .Notes}}<p class="text-sm italic text-base-content/60">{{.}}</p>{{end}}
         </div>
-        {{with .Notes}}<p class="text-sm italic text-base-content/60">{{.}}</p>{{end}}
       </div>
-    </div>
+    </li>
     {{end}}
-  </div>
+  </ul>
 {{end}}
 {{end}}

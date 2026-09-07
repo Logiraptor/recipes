@@ -1,52 +1,52 @@
 {{define "content"}}
 {{with .Recipe}}
-<div class="breadcrumbs mb-4 text-sm">
+<nav class="breadcrumbs mb-4 text-sm print:hidden">
   <ul><li><a href="/">Recipes</a></li><li>{{.Name}}</li></ul>
-</div>
+</nav>
 
-<div class="card bg-base-100 shadow-sm">
-  <div class="card-body">
-    <h1 class="text-3xl font-bold">{{.Name}}</h1>
-    {{with .Description}}<p class="text-base-content/70">{{.}}</p>{{end}}
-    <div class="mt-2 flex flex-wrap gap-1">
-      {{with .RecipeCategory}}<span class="badge badge-primary">{{.}}</span>{{end}}
-      {{with .RecipeCuisine}}<span class="badge badge-ghost">{{.}}</span>{{end}}
-      {{with .RecipeYield}}<span class="badge badge-outline">{{.}}</span>{{end}}
-    </div>
+<header>
+  <h1 class="text-3xl font-bold leading-tight">{{.Name}}</h1>
+  <p class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-base-content/70">
+    {{with .TotalTime}}<span class="font-semibold text-base-content">🕒 {{duration .}} total</span>{{end}}
+    {{with .PrepTime}}<span>Prep {{duration .}}</span>{{end}}
+    {{with .CookTime}}<span>Cook {{duration .}}</span>{{end}}
+    {{with .RecipeYield}}<span>{{.}}</span>{{end}}
+    {{with .RecipeCategory}}<span>{{.}}</span>{{end}}
+    {{with .RecipeCuisine}}<span>{{.}}</span>{{end}}
+  </p>
+  {{with .Description}}<p class="mt-2 max-w-2xl text-base-content/70">{{.}}</p>{{end}}
+</header>
 
-    {{if or .PrepTime .CookTime .TotalTime}}
-    <div class="stats stats-horizontal mt-4 bg-base-200">
-      {{with .PrepTime}}<div class="stat"><div class="stat-title">Prep</div><div class="stat-value text-xl">{{duration .}}</div></div>{{end}}
-      {{with .CookTime}}<div class="stat"><div class="stat-title">Cook</div><div class="stat-value text-xl">{{duration .}}</div></div>{{end}}
-      {{with .TotalTime}}<div class="stat"><div class="stat-title">Total</div><div class="stat-value text-xl">{{duration .}}</div></div>{{end}}
-    </div>
-    {{end}}
-  </div>
-</div>
-
-<div class="mt-6 grid gap-6 lg:grid-cols-3">
-  <section class="card bg-base-100 shadow-sm lg:col-span-1">
-    <div class="card-body">
-      <h2 class="card-title">Ingredients</h2>
-      <ul class="mt-2 space-y-2">
+<div class="mt-6 grid items-start gap-6 lg:grid-cols-5">
+  <section class="card bg-base-100 shadow-sm lg:sticky lg:top-20 lg:col-span-2">
+    <div class="card-body p-5">
+      <h2 class="text-lg font-semibold">
+        Ingredients <span class="font-normal text-base-content/50">({{len .RecipeIngredient}})</span>
+      </h2>
+      <p class="text-xs text-base-content/50 print:hidden">Tap an item to check it off.</p>
+      <ul class="mt-1">
         {{range .RecipeIngredient}}
-        <li><label class="label cursor-pointer justify-start gap-3">
-          <input type="checkbox" class="checkbox checkbox-primary checkbox-sm">
-          <span class="label-text">{{.}}</span>
-        </label></li>
+        <li class="border-b border-base-200 last:border-0">
+          <label class="flex cursor-pointer items-start gap-3 py-2">
+            <input type="checkbox" class="checkbox checkbox-primary checkbox-sm mt-0.5 shrink-0">
+            <span class="min-w-0 text-sm leading-snug">{{.}}</span>
+          </label>
+        </li>
         {{end}}
       </ul>
     </div>
   </section>
 
-  <section class="card bg-base-100 shadow-sm lg:col-span-2">
-    <div class="card-body">
-      <h2 class="card-title">Instructions</h2>
-      <ol class="mt-2 space-y-4">
+  <section class="card bg-base-100 shadow-sm lg:col-span-3">
+    <div class="card-body p-5">
+      <h2 class="text-lg font-semibold">
+        Instructions <span class="font-normal text-base-content/50">({{len .RecipeInstructions}} steps)</span>
+      </h2>
+      <ol class="mt-1">
         {{range $i, $step := .RecipeInstructions}}
-        <li class="flex gap-3">
-          <span class="badge badge-primary badge-lg shrink-0">{{add $i 1}}</span>
-          <p>{{$step}}</p>
+        <li class="flex gap-4 border-b border-base-200 py-3 last:border-0">
+          <span class="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary">{{add $i 1}}</span>
+          <p class="min-w-0 leading-relaxed">{{$step}}</p>
         </li>
         {{end}}
       </ol>

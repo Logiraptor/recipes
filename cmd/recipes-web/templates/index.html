@@ -1,33 +1,58 @@
 {{define "content"}}
-<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-  <div>
-    <h1 class="text-3xl font-bold">All recipes</h1>
-    <p class="text-base-content/60">{{len .Recipes}} recipe{{if ne (len .Recipes) 1}}s{{end}}{{if .Query}} matching “{{.Query}}”{{end}}, most cooked first</p>
+<h1 class="text-3xl font-bold">Recipes</h1>
+
+<form method="get" action="/" class="mt-4 flex flex-wrap items-center gap-2">
+  <label class="input input-bordered flex flex-1 min-w-64 items-center gap-2">
+    <span aria-hidden="true">🔍</span>
+    <input type="search" name="q" value="{{.Query}}" autofocus
+           placeholder="Search name, ingredient, cuisine" class="grow" aria-label="Search recipes">
+  </label>
+  {{if .Category}}<input type="hidden" name="category" value="{{.Category}}">{{end}}
+  <div class="join">
+    {{range .SortOptions}}
+    <button type="submit" name="sort" value="{{.Key}}"
+            class="btn join-item btn-sm h-10 {{if eq .Key $.Sort}}btn-active btn-primary{{end}}">{{.Label}}</button>
+    {{end}}
   </div>
-  <form method="get" action="/" class="join">
-    <input type="search" name="q" value="{{.Query}}" placeholder="Search name or ingredient" class="input input-bordered join-item w-64">
-    <button class="btn btn-primary join-item" type="submit">Search</button>
-  </form>
-</div>
+</form>
 
-{{if not .Recipes}}
-  <div class="alert">No recipes matched. <a class="link" href="/">Clear search</a></div>
-{{end}}
-
-<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-  {{range .Recipes}}
-  <a href="/recipes/{{.Slug}}" class="card bg-base-100 shadow-sm transition hover:shadow-md">
-    <div class="card-body">
-      <h2 class="card-title text-base">{{.Name}}</h2>
-      {{with .Description}}<p class="line-clamp-3 text-sm text-base-content/70">{{.}}</p>{{end}}
-      <div class="card-actions mt-2 flex-wrap gap-1">
-        {{with .RecipeCategory}}<span class="badge badge-primary badge-sm">{{.}}</span>{{end}}
-        {{with .RecipeCuisine}}<span class="badge badge-ghost badge-sm">{{.}}</span>{{end}}
-        {{with .TotalTime}}<span class="badge badge-outline badge-sm">{{duration .}}</span>{{end}}
-        {{if .Made}}<span class="badge badge-secondary badge-sm">Made {{.Made}}&times;</span>{{else}}<span class="badge badge-ghost badge-sm">Never made</span>{{end}}
-      </div>
-    </div>
-  </a>
+<div class="mt-3 flex flex-wrap items-center gap-2">
+  <a href="/?{{if .Query}}q={{.Query}}&{{end}}sort={{.Sort}}"
+     class="badge badge-lg {{if not .Category}}badge-primary{{else}}badge-ghost{{end}}">All</a>
+  {{range .Categories}}
+  <a href="/?{{if $.Query}}q={{$.Query}}&{{end}}sort={{$.Sort}}&category={{.Name}}"
+     class="badge badge-lg {{if eq .Name $.Category}}badge-primary{{else}}badge-ghost{{end}}">{{.Name}} {{.Count}}</a>
   {{end}}
 </div>
+
+<p class="mt-3 text-sm text-base-content/60" role="status">
+  {{len .Recipes}} recipe{{if ne (len .Recipes) 1}}s{{end}}{{if .Query}} matching “{{.Query}}”{{end}}{{if .Category}} in {{.Category}}{{end}}
+  {{if or .Query .Category}}· <a class="link" href="/">clear filters</a>{{end}}
+</p>
+
+{{if not .Recipes}}
+  <div class="alert mt-4">Nothing matched. <a class="link" href="/">Clear filters</a></div>
+{{end}}
+
+<ul class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  {{range .Recipes}}
+  <li class="h-full">
+    <a href="/recipes/{{.Slug}}"
+       class="card h-full bg-base-100 shadow-sm transition hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+      <div class="card-body gap-2 p-5">
+        <h2 class="text-base font-semibold leading-snug">{{.Name}}</h2>
+        <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-base-content/60">
+          {{with .TotalTime}}<span class="font-medium text-base-content/80">🕒 {{duration .}}</span>{{end}}
+          {{with .RecipeCuisine}}<span>{{.}}</span>{{end}}
+          <span>{{len .RecipeIngredient}} ingredients</span>
+        </p>
+        {{with .Description}}<p class="text-sm text-base-content/70">{{excerpt 110 .}}</p>{{end}}
+        <p class="mt-auto text-xs text-base-content/50">
+          {{if .Made}}Made {{.Made}}&times;{{else}}Not cooked yet{{end}}
+        </p>
+      </div>
+    </a>
+  </li>
+  {{end}}
+</ul>
 {{end}}

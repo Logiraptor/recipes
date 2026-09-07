@@ -33,8 +33,10 @@ var funcs = template.FuncMap{
 		}
 		return t.Format("Mon, Jan 2")
 	},
-	"title": strings.Title, //nolint:staticcheck // ASCII meal names only
-	"add":   func(a, b int) int { return a + b },
+	"title":   strings.Title, //nolint:staticcheck // ASCII meal names only
+	"add":     func(a, b int) int { return a + b },
+	"today":   func() string { return time.Now().Format(recipedata.DateLayout) },
+	"excerpt": excerpt,
 }
 
 // Each page defines its own "content" block, so pages get their own template
@@ -96,6 +98,22 @@ type server struct {
 type recipeCard struct {
 	*recipedata.Recipe
 	Made int
+	// Minutes is the recipe's total time in minutes, 0 when unknown. It is
+	// used for the "quickest first" ordering.
+	Minutes int
+}
+
+// categoryCount drives the category filter chips on the index page.
+type categoryCount struct {
+	Name  string
+	Count int
+}
+
+// sortOptions are the index-page orderings, in the order they're shown.
+var sortOptions = []struct{ Key, Label string }{
+	{"cooked", "Most cooked"},
+	{"name", "A–Z"},
+	{"time", "Quickest"},
 }
 
 func (s *server) index(w http.ResponseWriter, r *http.Request) {
@@ -109,26 +127,58 @@ func (s *server) index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	query := strings.TrimSpace(r.URL.Query().Get("q"))
+	category := strings.TrimSpace(r.URL.Query().Get("category"))
+	order := r.URL.Query().Get("sort")
+
+	// Category chips count the search results, not the filtered-by-category
+	// ones, so switching categories never shows a dead end.
 	if query != "" {
 		recipes = filter(recipes, query)
 	}
+	categories := categoryCounts(recipes)
+	if category != "" {
+		recipes = byCategory(recipes, category)
+	}
+
 	counts, err := s.store.MadeCounts(time.Now())
 	if err != nil {
 		s.fail(w, r, http.StatusInternalServerError, err)
 		return
 	}
-	// Most-cooked first; recipes come in name order, so the stable sort keeps
-	// alphabetical order within a count.
+	// Recipes arrive in name order, so every stable sort below keeps
+	// alphabetical order as the tie-breaker.
 	cards := make([]recipeCard, 0, len(recipes))
 	for _, rec := range recipes {
-		cards = append(cards, recipeCard{Recipe: rec, Made: counts[rec.Slug]})
+		cards = append(cards, recipeCard{
+			Recipe:  rec,
+			Made:    counts[rec.Slug],
+			Minutes: durationMinutes(rec.TotalTime),
+		})
 	}
-	sort.SliceStable(cards, func(i, j int) bool { return cards[i].Made > cards[j].Made })
+	switch order {
+	case "name":
+	case "time":
+		// Unknown times sort last: an unlabelled recipe isn't a quick one.
+		sort.SliceStable(cards, func(i, j int) bool {
+			a, b := cards[i].Minutes, cards[j].Minutes
+			if (a == 0) != (b == 0) {
+				return b == 0
+			}
+			return a < b
+		})
+	default:
+		order = "cooked"
+		sort.SliceStable(cards, func(i, j int) bool { return cards[i].Made > cards[j].Made })
+	}
 
 	s.render(w, r, "index.html", map[string]any{
-		"Title":   "Recipes",
-		"Recipes": cards,
-		"Query":   query,
+		"Title":       "Recipes",
+		"Recipes":     cards,
+		"Query":       query,
+		"Category":    category,
+		"Categories":  categories,
+		"Sort":        order,
+		"SortOptions": sortOptions,
 	})
 }
 
@@ -181,10 +231,26 @@ func (s *server) plan(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	// Weeks is newest-first, so the previous week is the next index.
+	var prev, next string
+	for i, wk := range weeks {
+		if wk != week {
+			continue
+		}
+		if i+1 < len(weeks) {
+			prev = weeks[i+1]
+		}
+		if i > 0 {
+			next = weeks[i-1]
+		}
+	}
+
 	s.render(w, r, "plan.html", map[string]any{
 		"Title": "Meal plan " + week,
 		"Week":  week,
 		"Weeks": weeks,
+		"Prev":  prev,
+		"Next":  next,
 		"Plan":  plan,
 		"Slots": slots,
 	})
@@ -225,6 +291,37 @@ func filter(recipes []*recipedata.Recipe, query string) []*recipedata.Recipe {
 	return out
 }
 
+// categoryCounts summarises recipeCategory across recipes, most common first.
+func categoryCounts(recipes []*recipedata.Recipe) []categoryCount {
+	counts := make(map[string]int)
+	for _, r := range recipes {
+		if r.RecipeCategory != "" {
+			counts[r.RecipeCategory]++
+		}
+	}
+	out := make([]categoryCount, 0, len(counts))
+	for name, n := range counts {
+		out = append(out, categoryCount{Name: name, Count: n})
+	}
+	sort.Slice(out, func(i, j int) bool {
+		if out[i].Count != out[j].Count {
+			return out[i].Count > out[j].Count
+		}
+		return out[i].Name < out[j].Name
+	})
+	return out
+}
+
+func byCategory(recipes []*recipedata.Recipe, category string) []*recipedata.Recipe {
+	var out []*recipedata.Recipe
+	for _, r := range recipes {
+		if strings.EqualFold(r.RecipeCategory, category) {
+			out = append(out, r)
+		}
+	}
+	return out
+}
+
 var isoDuration = regexp.MustCompile(`^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?)?$`)
 
 // humanDuration turns an ISO-8601 duration like PT1H30M into "1 hr 30 min".
@@ -249,6 +346,31 @@ func humanDuration(d string) string {
 		return d
 	}
 	return strings.Join(parts, " ")
+}
+
+// durationMinutes converts an ISO-8601 duration to minutes, 0 if unparseable.
+func durationMinutes(d string) int {
+	m := isoDuration.FindStringSubmatch(d)
+	if m == nil {
+		return 0
+	}
+	days, _ := strconv.Atoi(m[1])
+	hours, _ := strconv.Atoi(m[2])
+	mins, _ := strconv.Atoi(m[3])
+	return days*24*60 + hours*60 + mins
+}
+
+// excerpt shortens text to at most n characters on a word boundary, so card
+// summaries stay one predictable size instead of relying on CSS clamping.
+func excerpt(n int, text string) string {
+	if len(text) <= n {
+		return text
+	}
+	cut := text[:n]
+	if i := strings.LastIndexAny(cut, " \t\n"); i > 0 {
+		cut = cut[:i]
+	}
+	return strings.TrimRight(cut, " ,.;:—-") + "…"
 }
 
 func weekday(date string) string {
