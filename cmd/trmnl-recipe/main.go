@@ -3,65 +3,20 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"log/slog"
 	"net/http"
-	"net/url"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/patrickoyarzun/recipes/internal/recipedata"
 )
 
 const trmnlMaxPayloadBytes = 2000
-
-type planEntry struct {
-	Date      string         `json:"date"`
-	EntryType string         `json:"entryType"`
-	Title     string         `json:"title"`
-	RecipeID  *string        `json:"recipeId"`
-	Recipe    *recipeSummary `json:"recipe"`
-}
-
-type mealplanPage struct {
-	Items []planEntry `json:"items"`
-}
-
-type recipeSummary struct {
-	Name string `json:"name"`
-	Slug string `json:"slug"`
-}
-
-type recipe struct {
-	Name               string        `json:"name"`
-	RecipeYield        string        `json:"recipeYield"`
-	TotalTime          string        `json:"totalTime"`
-	PrepTime           string        `json:"prepTime"`
-	RecipeIngredient   []ingredient  `json:"recipeIngredient"`
-	RecipeInstructions []instruction `json:"recipeInstructions"`
-}
-
-type ingredient struct {
-	Display      string          `json:"display"`
-	Quantity     *float64        `json:"quantity"`
-	Unit         *ingredientUnit `json:"unit"`
-	Food         *ingredientFood `json:"food"`
-	Note         *string         `json:"note"`
-	OriginalText *string         `json:"originalText"`
-}
-
-type ingredientUnit struct {
-	Name string `json:"name"`
-}
-
-type ingredientFood struct {
-	Name string `json:"name"`
-}
-
-type instruction struct {
-	Title string `json:"title"`
-	Text  string `json:"text"`
-}
 
 type webhookPayload struct {
 	MergeVariables mergeVariables `json:"merge_variables"`
@@ -91,26 +46,37 @@ func main() {
 	start := time.Now()
 	slog.Info("starting trmnl-recipe")
 
-	baseURL := requireEnv("MEALIE_BASE")
-	token := requireEnv("MEALIE_TOKEN")
 	webhookURL := requireEnv("TRMNL_WEBHOOK_URL")
+
+	store, err := recipedata.Open()
+	if err != nil {
+		slog.Error("failed to locate recipe data", "error", err)
+		os.Exit(1)
+	}
+	slog.Info("using recipe data", "root", store.Root)
 
 	now := time.Now()
 	mealType := mealTypeAt(now)
 	mealLabel := titleCase(mealType)
 	slog.Info("resolved meal type", "time", now.Format(time.RFC3339), "hour", now.Hour(), "meal_type", mealType)
 
-	t0 := time.Now()
-	entries, err := fetchTodayMealplans(baseURL, token)
-	if err != nil {
-		slog.Error("failed to fetch today's meal plan", "error", err, "elapsed", time.Since(t0))
+	today := now.Format(recipedata.DateLayout)
+	week := recipedata.WeekStart(now)
+	plan, err := store.MealPlan(week)
+	switch {
+	case errors.Is(err, fs.ErrNotExist):
+		slog.Info("no meal plan file for this week", "week", week)
+		plan = &recipedata.MealPlan{WeekStart: week}
+	case err != nil:
+		slog.Error("failed to load this week's meal plan", "week", week, "error", err)
 		os.Exit(1)
 	}
-	entryTypes := make([]string, len(entries))
+	entries := entriesOn(plan, today)
+	meals := make([]string, len(entries))
 	for i, e := range entries {
-		entryTypes[i] = e.EntryType
+		meals[i] = e.Meal
 	}
-	slog.Info("fetched today's mealplans", "count", len(entries), "entry_types", entryTypes, "elapsed", time.Since(t0))
+	slog.Info("loaded today's entries", "week", week, "date", today, "count", len(entries), "meals", meals)
 
 	entry := selectMeal(entries, mealType)
 	if entry == nil {
@@ -133,16 +99,15 @@ func main() {
 		return
 	}
 
-	slug := entry.Recipe.Slug
-	slog.Info("selected meal", "meal_type", mealType, "recipe_slug", slug, "recipe_name", entry.Recipe.Name)
+	slug := entry.Recipe
+	slog.Info("selected meal", "meal_type", mealType, "recipe_slug", slug)
 
-	t1 := time.Now()
-	r, err := fetchRecipe(baseURL, token, slug)
+	r, err := store.Recipe(slug)
 	if err != nil {
-		slog.Error("failed to fetch recipe", "slug", slug, "error", err, "elapsed", time.Since(t1))
+		slog.Error("failed to load recipe", "slug", slug, "error", err)
 		os.Exit(1)
 	}
-	slog.Info("fetched recipe", "slug", slug, "name", r.Name, "ingredients", len(r.RecipeIngredient), "instructions", len(r.RecipeInstructions), "elapsed", time.Since(t1))
+	slog.Info("loaded recipe", "slug", slug, "name", r.Name, "ingredients", len(r.RecipeIngredient), "instructions", len(r.RecipeInstructions))
 
 	payload := webhookPayload{
 		MergeVariables: mergeVariables{
@@ -150,8 +115,8 @@ func main() {
 			RecipeName:   r.Name,
 			MealType:     mealType,
 			MealLabel:    mealLabel,
-			Ingredients:  ingredientLines(r.RecipeIngredient),
-			Instructions: instructionLines(r.RecipeInstructions),
+			Ingredients:  r.RecipeIngredient,
+			Instructions: r.RecipeInstructions,
 			TotalTime:    r.TotalTime,
 			PrepTime:     r.PrepTime,
 			RecipeYield:  r.RecipeYield,
@@ -191,114 +156,25 @@ func mealTypeAt(now time.Time) string {
 	}
 }
 
-func selectMeal(entries []planEntry, mealType string) *planEntry {
+// entriesOn returns the plan entries scheduled for the given date.
+func entriesOn(plan *recipedata.MealPlan, date string) []recipedata.Entry {
+	var out []recipedata.Entry
+	for _, e := range plan.Entries {
+		if e.Date == date {
+			out = append(out, e)
+		}
+	}
+	return out
+}
+
+func selectMeal(entries []recipedata.Entry, mealType string) *recipedata.Entry {
 	for i := range entries {
 		entry := &entries[i]
-		if strings.EqualFold(entry.EntryType, mealType) && entry.Recipe != nil && entry.Recipe.Slug != "" {
+		if strings.EqualFold(entry.Meal, mealType) && entry.Recipe != "" {
 			return entry
 		}
 	}
 	return nil
-}
-
-func fetchTodayMealplans(baseURL, token string) ([]planEntry, error) {
-	endpoint, err := url.JoinPath(baseURL, "api", "households", "mealplans", "today")
-	if err != nil {
-		return nil, err
-	}
-
-	body, err := doGet(endpoint, token)
-	if err != nil {
-		return nil, err
-	}
-
-	var entries []planEntry
-	if err := json.Unmarshal(body, &entries); err == nil {
-		return entries, nil
-	}
-
-	var page mealplanPage
-	if err := json.Unmarshal(body, &page); err == nil {
-		return page.Items, nil
-	}
-
-	return nil, fmt.Errorf("parse today mealplans: %s", truncate(body, 200))
-}
-
-func fetchRecipe(baseURL, token, slug string) (*recipe, error) {
-	endpoint, err := url.JoinPath(baseURL, "api", "recipes", slug)
-	if err != nil {
-		return nil, err
-	}
-
-	body, err := doGet(endpoint, token)
-	if err != nil {
-		return nil, err
-	}
-
-	var r recipe
-	if err := json.Unmarshal(body, &r); err != nil {
-		return nil, fmt.Errorf("parse recipe: %w", err)
-	}
-	return &r, nil
-}
-
-func ingredientLines(ingredients []ingredient) []string {
-	lines := make([]string, 0, len(ingredients))
-	for _, ing := range ingredients {
-		line := ingredientLine(ing)
-		if line != "" {
-			lines = append(lines, line)
-		}
-	}
-	return lines
-}
-
-func instructionLines(instructions []instruction) []string {
-	lines := make([]string, 0, len(instructions))
-	for _, step := range instructions {
-		text := strings.TrimSpace(step.Text)
-		title := strings.TrimSpace(step.Title)
-
-		switch {
-		case title != "" && text != "":
-			lines = append(lines, title+": "+text)
-		case text != "":
-			lines = append(lines, text)
-		case title != "":
-			lines = append(lines, title)
-		}
-	}
-	return lines
-}
-
-func ingredientLine(ing ingredient) string {
-	if ing.Display != "" {
-		return ing.Display
-	}
-	if ing.OriginalText != nil && *ing.OriginalText != "" {
-		return *ing.OriginalText
-	}
-
-	var parts []string
-	if ing.Quantity != nil && *ing.Quantity > 0 {
-		q := *ing.Quantity
-		if q == float64(int(q)) {
-			parts = append(parts, fmt.Sprintf("%d", int(q)))
-		} else {
-			parts = append(parts, fmt.Sprintf("%.2g", q))
-		}
-	}
-	if ing.Unit != nil && ing.Unit.Name != "" {
-		parts = append(parts, ing.Unit.Name)
-	}
-	if ing.Food != nil && ing.Food.Name != "" {
-		parts = append(parts, ing.Food.Name)
-	}
-	if ing.Note != nil && *ing.Note != "" {
-		parts = append(parts, "("+*ing.Note+")")
-	}
-	return strings.Join(parts, " ")
 }
 
 func fitPayload(payload webhookPayload, maxBytes int) (webhookPayload, error) {
@@ -338,7 +214,7 @@ func fitPayload(payload webhookPayload, maxBytes int) (webhookPayload, error) {
 
 	if truncated {
 		fitted.MergeVariables.Truncated = true
-		fitted.MergeVariables.TruncatedNote = "Recipe trimmed to fit TRMNL payload limits. Open Mealie for the full recipe."
+		fitted.MergeVariables.TruncatedNote = "Recipe trimmed to fit TRMNL payload limits. See the full recipe at home."
 	}
 
 	for size > maxBytes && fitted.MergeVariables.TruncatedNote != "" {
@@ -375,7 +251,7 @@ func fitPayload(payload webhookPayload, maxBytes int) (webhookPayload, error) {
 
 	if size > maxBytes {
 		fitted.MergeVariables.Instructions = nil
-		fitted.MergeVariables.Message = "Recipe too large for TRMNL. Open Mealie for the full instructions."
+		fitted.MergeVariables.Message = "Recipe too large for TRMNL. See the full instructions at home."
 		size, err = payloadSize(fitted)
 		if err != nil {
 			return webhookPayload{}, err
@@ -434,32 +310,6 @@ func postWebhook(endpoint string, payload webhookPayload) error {
 		return fmt.Errorf("HTTP %d: %s", resp.StatusCode, truncate(respBody, 200))
 	}
 	return nil
-}
-
-func doGet(endpoint, token string) ([]byte, error) {
-	slog.Debug("GET", "url", endpoint)
-	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
-	if err != nil {
-		return nil, err
-	}
-	req.Header.Set("Authorization", "Bearer "+token)
-	req.Header.Set("Accept", "application/json")
-
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	slog.Debug("GET response", "url", endpoint, "status", resp.StatusCode, "body_bytes", len(body))
-	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return nil, fmt.Errorf("HTTP %d: %s", resp.StatusCode, truncate(body, 200))
-	}
-	return body, nil
 }
 
 func titleCase(s string) string {
