@@ -1,0 +1,57 @@
+{{define "content"}}
+{{with .Recipe}}
+<div class="breadcrumbs mb-4 text-sm">
+  <ul><li><a href="/">Recipes</a></li><li>{{.Name}}</li></ul>
+</div>
+
+<div class="card bg-base-100 shadow-sm">
+  <div class="card-body">
+    <h1 class="text-3xl font-bold">{{.Name}}</h1>
+    {{with .Description}}<p class="text-base-content/70">{{.}}</p>{{end}}
+    <div class="mt-2 flex flex-wrap gap-1">
+      {{with .RecipeCategory}}<span class="badge badge-primary">{{.}}</span>{{end}}
+      {{with .RecipeCuisine}}<span class="badge badge-ghost">{{.}}</span>{{end}}
+      {{with .RecipeYield}}<span class="badge badge-outline">{{.}}</span>{{end}}
+    </div>
+
+    {{if or .PrepTime .CookTime .TotalTime}}
+    <div class="stats stats-horizontal mt-4 bg-base-200">
+      {{with .PrepTime}}<div class="stat"><div class="stat-title">Prep</div><div class="stat-value text-xl">{{duration .}}</div></div>{{end}}
+      {{with .CookTime}}<div class="stat"><div class="stat-title">Cook</div><div class="stat-value text-xl">{{duration .}}</div></div>{{end}}
+      {{with .TotalTime}}<div class="stat"><div class="stat-title">Total</div><div class="stat-value text-xl">{{duration .}}</div></div>{{end}}
+    </div>
+    {{end}}
+  </div>
+</div>
+
+<div class="mt-6 grid gap-6 lg:grid-cols-3">
+  <section class="card bg-base-100 shadow-sm lg:col-span-1">
+    <div class="card-body">
+      <h2 class="card-title">Ingredients</h2>
+      <ul class="mt-2 space-y-2">
+        {{range .RecipeIngredient}}
+        <li><label class="label cursor-pointer justify-start gap-3">
+          <input type="checkbox" class="checkbox checkbox-primary checkbox-sm">
+          <span class="label-text">{{.}}</span>
+        </label></li>
+        {{end}}
+      </ul>
+    </div>
+  </section>
+
+  <section class="card bg-base-100 shadow-sm lg:col-span-2">
+    <div class="card-body">
+      <h2 class="card-title">Instructions</h2>
+      <ol class="mt-2 space-y-4">
+        {{range $i, $step := .RecipeInstructions}}
+        <li class="flex gap-3">
+          <span class="badge badge-primary badge-lg shrink-0">{{add $i 1}}</span>
+          <p>{{$step}}</p>
+        </li>
+        {{end}}
+      </ol>
+    </div>
+  </section>
+</div>
+{{end}}
+{{end}}

@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -137,3 +138,55 @@ func WeekStart(t time.Time) string {
 
 // DateLayout is the date format used by filenames and entry dates.
 const DateLayout = "2006-01-02"
+
+// Recipes loads every recipe in recipes/, sorted by name.
+func (s *Store) Recipes() ([]*Recipe, error) {
+	slugs, err := s.RecipeSlugs()
+	if err != nil {
+		return nil, err
+	}
+	recipes := make([]*Recipe, 0, len(slugs))
+	for _, slug := range slugs {
+		r, err := s.Recipe(slug)
+		if err != nil {
+			return nil, err
+		}
+		recipes = append(recipes, r)
+	}
+	sort.SliceStable(recipes, func(i, j int) bool {
+		return strings.ToLower(recipes[i].Name) < strings.ToLower(recipes[j].Name)
+	})
+	return recipes, nil
+}
+
+// RecipeSlugs lists the slugs of every recipe file, sorted.
+func (s *Store) RecipeSlugs() ([]string, error) {
+	return s.slugs("recipes")
+}
+
+// Weeks lists the week-start dates of every meal plan, most recent first.
+func (s *Store) Weeks() ([]string, error) {
+	weeks, err := s.slugs("meal-plans")
+	if err != nil {
+		return nil, err
+	}
+	sort.Sort(sort.Reverse(sort.StringSlice(weeks)))
+	return weeks, nil
+}
+
+func (s *Store) slugs(sub string) ([]string, error) {
+	entries, err := os.ReadDir(filepath.Join(s.Root, sub))
+	if err != nil {
+		return nil, err
+	}
+	var out []string
+	for _, e := range entries {
+		name := e.Name()
+		if e.IsDir() || filepath.Ext(name) != ".json" {
+			continue
+		}
+		out = append(out, strings.TrimSuffix(name, ".json"))
+	}
+	sort.Strings(out)
+	return out, nil
+}

@@ -11,9 +11,10 @@ directly, over the filesystem, with no credentials or network access.
 
 ## Project Overview
 
-A Go project for managing recipes and weekly meal plans as JSON files, with two tools:
+A Go project for managing recipes and weekly meal plans as JSON files, with three tools:
 1. `trmnl-recipe` - Picks the recipe for the current meal slot and sends it to a TRMNL webhook
 2. `mealplan-ingredients` - Prints the week's meal plan and a combined shopping list
+3. `recipes-web` - Read-only website browsing recipes and meal plans (daisyUI/Tailwind UI)
 
 ## Code Organization
 
@@ -31,6 +32,9 @@ A Go project for managing recipes and weekly meal plans as JSON files, with two 
   Both commands go through it; add new data access here, not in `cmd/`.
 - `cmd/trmnl-recipe/` - Source code for the TRMNL recipe webhook tool
 - `cmd/mealplan-ingredients/` - Source code for the meal plan ingredients tool
+- `cmd/recipes-web/` - Web server; `templates/*.html` are embedded via `embed.FS`.
+  Styling comes from daisyUI (MIT) on top of Tailwind, loaded from a CDN, so
+  there is no CSS build step and no hand-rolled design system.
 - `deploy/` - Deployment configuration files
 
 ## Build and Run
@@ -43,6 +47,9 @@ go build ./...
 go run ./cmd/mealplan-ingredients
 go run ./cmd/mealplan-ingredients -week 2025-06-01
 
+# Serve the website at http://localhost:8080
+go run ./cmd/recipes-web
+
 # Build with CGO disabled for smaller binaries (as in Dockerfile)
 CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o trmnl-recipe ./cmd/trmnl-recipe
 ```
@@ -50,6 +57,8 @@ CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o trmnl-recipe ./cmd/trmnl-re
 ### Docker Build
 ```bash
 docker build -t trmnl-recipe .
+docker build -f Dockerfile.web -t recipes-web .
+docker run --rm -p 8080:8080 recipes-web
 ```
 
 The image bakes `recipes/` and `meal-plans/` into `/data` and sets
@@ -72,6 +81,11 @@ The image bakes `recipes/` and `meal-plans/` into `/data` and sets
 - Sends formatted recipe data to configured webhook URL
 - A missing meal-plan file is not an error: it pushes the empty state
 
+### Web Tool (`recipes-web`)
+- Routes: `/` (searchable recipe grid), `/recipes/{slug}`, `/plan?week=YYYY-MM-DD`, `/healthz`
+- Reads from disk on every request, so edits to `recipes/` show up on refresh locally
+- Each page template defines a `content` block layered on `templates/layout.html`
+
 ### Mealplan Ingredients Tool (`mealplan-ingredients`)
 - Loads the weekly meal plan and every recipe it references
 - Prints the plan, per-recipe ingredients, and a combined shopping list
@@ -89,6 +103,7 @@ The image bakes `recipes/` and `meal-plans/` into `/data` and sets
 - `RECIPES_ROOT` - Data root override (optional; both tools auto-detect it
   by walking up from the working directory)
 - `TRMNL_WEBHOOK_URL` - URL to send the TRMNL webhook payload (trmnl-recipe only)
+- `ADDR` - Listen address for `recipes-web` (default `:8080`; `-addr` flag overrides)
 
 ### Error Handling
 - Tools exit with non-zero status codes on failure
@@ -140,3 +155,9 @@ The Dockerfile:
 
 `deploy/trmnl-recipe-cronjob.example.yaml` runs it as a CronJob; the only
 secret it needs is `TRMNL_WEBHOOK_URL`.
+
+### Images and CI
+Two GitHub Actions workflows publish multi-arch images to GHCR on pushes to
+`main` (and via `workflow_dispatch`), tagged `main` and `sha-<sha>`:
+- `.github/workflows/publish.yml` → `ghcr.io/<repo>` from `Dockerfile` (trmnl-recipe)
+- `.github/workflows/publish-web.yml` → `ghcr.io/<repo>-web` from `Dockerfile.web` (recipes-web)

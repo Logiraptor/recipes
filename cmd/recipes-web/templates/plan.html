@@ -1,0 +1,42 @@
+{{define "content"}}
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+  <div>
+    <h1 class="text-3xl font-bold">Meal plan</h1>
+    <p class="text-base-content/60">Week of {{prettyDate .Week}}</p>
+  </div>
+  <form method="get" action="/plan" class="join">
+    <select name="week" class="select select-bordered join-item">
+      {{range .Weeks}}<option value="{{.}}" {{if eq . $.Week}}selected{{end}}>{{prettyDate .}}</option>{{end}}
+    </select>
+    <button class="btn btn-primary join-item" type="submit">Go</button>
+  </form>
+</div>
+
+{{if not .Plan}}
+  <div class="alert alert-warning">No meal plan file for {{.Week}} yet.</div>
+{{else}}
+  {{with .Plan.Notes}}<div class="alert mb-6">{{.}}</div>{{end}}
+  <div class="grid gap-4 sm:grid-cols-2">
+    {{range .Slots}}
+    <div class="card bg-base-100 shadow-sm">
+      <div class="card-body">
+        <div class="flex items-center justify-between">
+          <h2 class="card-title text-base">{{weekday .Date}}</h2>
+          <span class="badge badge-secondary badge-sm">{{title .Meal}}</span>
+        </div>
+        {{if .Recipe}}
+          <a href="/recipes/{{.Recipe.Slug}}" class="link link-primary font-medium">{{.Recipe.Name}}</a>
+          {{with .Recipe.Description}}<p class="line-clamp-2 text-sm text-base-content/70">{{.}}</p>{{end}}
+        {{else}}
+          <p class="font-medium">{{.Label}}</p>
+        {{end}}
+        <div class="mt-1 flex flex-wrap gap-1">
+          {{if .Servings}}<span class="badge badge-outline badge-sm">{{.Servings}} servings</span>{{end}}
+        </div>
+        {{with .Notes}}<p class="text-sm italic text-base-content/60">{{.}}</p>{{end}}
+      </div>
+    </div>
+    {{end}}
+  </div>
+{{end}}
+{{end}}

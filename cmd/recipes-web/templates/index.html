@@ -1,0 +1,32 @@
+{{define "content"}}
+<div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+  <div>
+    <h1 class="text-3xl font-bold">All recipes</h1>
+    <p class="text-base-content/60">{{len .Recipes}} recipe{{if ne (len .Recipes) 1}}s{{end}}{{if .Query}} matching “{{.Query}}”{{end}}</p>
+  </div>
+  <form method="get" action="/" class="join">
+    <input type="search" name="q" value="{{.Query}}" placeholder="Search name or ingredient" class="input input-bordered join-item w-64">
+    <button class="btn btn-primary join-item" type="submit">Search</button>
+  </form>
+</div>
+
+{{if not .Recipes}}
+  <div class="alert">No recipes matched. <a class="link" href="/">Clear search</a></div>
+{{end}}
+
+<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+  {{range .Recipes}}
+  <a href="/recipes/{{.Slug}}" class="card bg-base-100 shadow-sm transition hover:shadow-md">
+    <div class="card-body">
+      <h2 class="card-title text-base">{{.Name}}</h2>
+      {{with .Description}}<p class="line-clamp-3 text-sm text-base-content/70">{{.}}</p>{{end}}
+      <div class="card-actions mt-2 flex-wrap gap-1">
+        {{with .RecipeCategory}}<span class="badge badge-primary badge-sm">{{.}}</span>{{end}}
+        {{with .RecipeCuisine}}<span class="badge badge-ghost badge-sm">{{.}}</span>{{end}}
+        {{with .TotalTime}}<span class="badge badge-outline badge-sm">{{duration .}}</span>{{end}}
+      </div>
+    </div>
+  </a>
+  {{end}}
+</div>
+{{end}}
