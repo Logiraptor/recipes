@@ -4,17 +4,16 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: trmnl-recipe-secrets
-  namespace: mealie
+  namespace: recipes
 type: Opaque
 stringData:
-  MEALIE_TOKEN: replace-with-mealie-api-token
   TRMNL_WEBHOOK_URL: https://trmnl.com/api/custom_plugins/replace-with-plugin-uuid
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: trmnl-recipe
-  namespace: mealie
+  namespace: recipes
 spec:
   schedule: "0 5,11,14 * * *"
   # Change this to your local timezone so breakfast/lunch/dinner fire when expected.
@@ -34,13 +33,9 @@ spec:
               image: ghcr.io/patrickoyarzun/recipes:main
               imagePullPolicy: Always
               env:
-                - name: MEALIE_BASE
-                  value: http://mealie
-                - name: MEALIE_TOKEN
-                  valueFrom:
-                    secretKeyRef:
-                      name: trmnl-recipe-secrets
-                      key: MEALIE_TOKEN
+                # Recipes and meal plans are baked into the image at /data.
+                - name: RECIPES_ROOT
+                  value: /data
                 - name: TRMNL_WEBHOOK_URL
                   valueFrom:
                     secretKeyRef:
