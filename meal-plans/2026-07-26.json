@@ -1,0 +1,20 @@
+{
+  "weekStart": "2026-07-26",
+  "entries": [
+    {
+      "date": "2026-07-27",
+      "meal": "dinner",
+      "recipe": "cajun-red-beans-rice"
+    },
+    {
+      "date": "2026-07-28",
+      "meal": "dinner",
+      "recipe": "hoisin-garlic-noodles"
+    },
+    {
+      "date": "2026-07-29",
+      "meal": "dinner",
+      "recipe": "one-pot-cheddar-tomato-mac"
+    }
+  ]
+}

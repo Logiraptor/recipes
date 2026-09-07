@@ -1,0 +1,16 @@
+{
+  "name": "Blueberry Avocado Smoothie",
+  "description": "A quick, drinkable smoothie the whole family can share — toddler-friendly and one-handed.",
+  "recipeIngredient": [
+    "1 cup frozen blueberries",
+    "1/2 cup frozen banana",
+    "1 cup baby spinach",
+    "1 tablespoon chia seeds",
+    "1 cup unsweetened coconut milk",
+    "2/7 avocado"
+  ],
+  "recipeInstructions": [
+    "Blend & pour: Add all ingredients to a blender. Blend until smooth, adding a splash more coconut milk if needed. Pour into cups and serve."
+  ],
+  "recipeYield": "2 servings"
+}

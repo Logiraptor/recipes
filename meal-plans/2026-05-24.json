@@ -1,0 +1,45 @@
+{
+  "weekStart": "2026-05-24",
+  "entries": [
+    {
+      "date": "2026-05-25",
+      "meal": "breakfast",
+      "recipe": "pancakes"
+    },
+    {
+      "date": "2026-05-26",
+      "meal": "breakfast",
+      "recipe": "smoked-salmon-spinach-scramble"
+    },
+    {
+      "date": "2026-05-26",
+      "meal": "dinner",
+      "recipe": "vietnamese-pork-bowls"
+    },
+    {
+      "date": "2026-05-27",
+      "meal": "breakfast",
+      "recipe": "egg-and-honey-toast"
+    },
+    {
+      "date": "2026-05-27",
+      "meal": "dinner",
+      "recipe": "meaty-jambalaya"
+    },
+    {
+      "date": "2026-05-28",
+      "meal": "breakfast",
+      "recipe": "toddler-friendly-veggie-quiche"
+    },
+    {
+      "date": "2026-05-28",
+      "meal": "dinner",
+      "recipe": "mediterranean-baked-cod-with-tomatoes-and-olives"
+    },
+    {
+      "date": "2026-05-29",
+      "meal": "dinner",
+      "recipe": "instant-pot-butter-chicken"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "Egg and Honey Toast",
+  "recipeIngredient": [
+    "3 eggs",
+    "3 slices pumpernickel rye",
+    "3 tablespoons olive oil",
+    "6 teaspoons honey",
+    "1 dash sea salt"
+  ],
+  "recipeInstructions": [
+    "Oil a pan with 1 tbsp of olive oil per egg and toast pair",
+    "Fry egg and toast in the pan x3",
+    "Remove toast from pan and drizzle 2 tsp of honey on the toast",
+    "Place fried egg on toast and season to taste with salt"
+  ],
+  "totalTime": "PT10M"
+}

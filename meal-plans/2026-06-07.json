@@ -1,0 +1,40 @@
+{
+  "weekStart": "2026-06-07",
+  "entries": [
+    {
+      "date": "2026-06-08",
+      "meal": "breakfast",
+      "recipe": "pancakes"
+    },
+    {
+      "date": "2026-06-08",
+      "meal": "dinner",
+      "recipe": "instant-pot-coconut-chicken-curry"
+    },
+    {
+      "date": "2026-06-09",
+      "meal": "breakfast",
+      "recipe": "southern-buttermilk-biscuits"
+    },
+    {
+      "date": "2026-06-09",
+      "meal": "dinner",
+      "recipe": "one-pot-chicken-parmesan-pasta"
+    },
+    {
+      "date": "2026-06-10",
+      "meal": "dinner",
+      "recipe": "creamy-tuna-pasta-with-peas"
+    },
+    {
+      "date": "2026-06-11",
+      "meal": "dinner",
+      "recipe": "spiced-lentils-with-carrots"
+    },
+    {
+      "date": "2026-06-12",
+      "meal": "dinner",
+      "recipe": "black-bean-and-corn-tacos"
+    }
+  ]
+}

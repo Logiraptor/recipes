@@ -1,0 +1,25 @@
+{
+  "weekStart": "2026-07-12",
+  "entries": [
+    {
+      "date": "2026-07-13",
+      "meal": "dinner",
+      "recipe": "instant-pot-butter-chicken"
+    },
+    {
+      "date": "2026-07-14",
+      "meal": "dinner",
+      "recipe": "coconut-curry-with-air-fried-cod"
+    },
+    {
+      "date": "2026-07-15",
+      "meal": "dinner",
+      "recipe": "garlic-butter-baked-cod"
+    },
+    {
+      "date": "2026-07-15",
+      "meal": "dinner",
+      "recipe": "simple-pan-broccolini"
+    }
+  ]
+}

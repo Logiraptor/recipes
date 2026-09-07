@@ -1,0 +1,40 @@
+{
+  "weekStart": "2026-05-03",
+  "entries": [
+    {
+      "date": "2026-05-04",
+      "meal": "breakfast",
+      "recipe": "turmeric-golden-oats"
+    },
+    {
+      "date": "2026-05-04",
+      "meal": "dinner",
+      "recipe": "instant-pot-lentil-and-vegetable-curry"
+    },
+    {
+      "date": "2026-05-05",
+      "meal": "breakfast",
+      "recipe": "smoked-salmon-spinach-scramble"
+    },
+    {
+      "date": "2026-05-05",
+      "meal": "dinner",
+      "recipe": "mediterranean-baked-cod-with-tomatoes-and-olives"
+    },
+    {
+      "date": "2026-05-06",
+      "meal": "breakfast",
+      "recipe": "blueberry-avocado-smoothie"
+    },
+    {
+      "date": "2026-05-06",
+      "meal": "dinner",
+      "recipe": "ginger-garlic-shrimp-stir-fry"
+    },
+    {
+      "date": "2026-05-07",
+      "meal": "breakfast",
+      "recipe": "mango-chia-seed-pudding"
+    }
+  ]
+}

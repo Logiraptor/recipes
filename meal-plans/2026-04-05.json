@@ -1,0 +1,70 @@
+{
+  "weekStart": "2026-04-05",
+  "entries": [
+    {
+      "date": "2026-04-06",
+      "meal": "breakfast",
+      "recipe": "greek-yogurt-parfait-with-berries-and-granola"
+    },
+    {
+      "date": "2026-04-06",
+      "meal": "dinner",
+      "recipe": "sichuan-style-mongolian-beef"
+    },
+    {
+      "date": "2026-04-07",
+      "meal": "breakfast",
+      "recipe": "pancakes"
+    },
+    {
+      "date": "2026-04-07",
+      "meal": "lunch",
+      "title": "Leftover Red Beans"
+    },
+    {
+      "date": "2026-04-07",
+      "meal": "dinner",
+      "recipe": "cajun-chicken-and-rice-one-pot"
+    },
+    {
+      "date": "2026-04-08",
+      "meal": "breakfast",
+      "recipe": "scrambled-eggs-with-andouille-sausage-and-toast"
+    },
+    {
+      "date": "2026-04-08",
+      "meal": "lunch",
+      "title": "Leftover Chicken + Rice"
+    },
+    {
+      "date": "2026-04-09",
+      "meal": "breakfast",
+      "recipe": "make-ahead-veggie-and-cheese-mini-frittatas"
+    },
+    {
+      "date": "2026-04-09",
+      "meal": "lunch",
+      "title": "Leftover over mongolian beef"
+    },
+    {
+      "date": "2026-04-09",
+      "meal": "dinner",
+      "recipe": "cajun-red-beans-rice"
+    },
+    {
+      "date": "2026-04-10",
+      "meal": "breakfast",
+      "recipe": "southern-buttermilk-biscuits"
+    },
+    {
+      "date": "2026-04-10",
+      "meal": "lunch",
+      "title": "Leftover Jambalaya"
+    },
+    {
+      "date": "2026-04-10",
+      "meal": "dinner",
+      "recipe": "garlic-ginger-beef-stir-fry-with-rice"
+    }
+  ]
+}

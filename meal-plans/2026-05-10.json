@@ -1,0 +1,55 @@
+{
+  "weekStart": "2026-05-10",
+  "entries": [
+    {
+      "date": "2026-05-11",
+      "meal": "breakfast",
+      "recipe": "egg-and-honey-toast"
+    },
+    {
+      "date": "2026-05-11",
+      "meal": "dinner",
+      "recipe": "seared-steak-roasted-beet-chopped-salad"
+    },
+    {
+      "date": "2026-05-12",
+      "meal": "breakfast",
+      "recipe": "greek-yogurt-parfait-with-berries-and-granola"
+    },
+    {
+      "date": "2026-05-12",
+      "meal": "dinner",
+      "recipe": "wild-salmon-avocado-mediterranean-bowl"
+    },
+    {
+      "date": "2026-05-13",
+      "meal": "breakfast",
+      "recipe": "mango-chia-seed-pudding"
+    },
+    {
+      "date": "2026-05-13",
+      "meal": "dinner",
+      "recipe": "falafel-kale-tabbouleh-style-salad"
+    },
+    {
+      "date": "2026-05-14",
+      "meal": "breakfast",
+      "recipe": "greek-yogurt-parfait-with-berries-and-granola"
+    },
+    {
+      "date": "2026-05-14",
+      "meal": "dinner",
+      "recipe": "lentil-roasted-sweet-potato-harvest-salad"
+    },
+    {
+      "date": "2026-05-15",
+      "meal": "breakfast",
+      "recipe": "smoked-salmon-spinach-scramble"
+    },
+    {
+      "date": "2026-05-15",
+      "meal": "dinner",
+      "recipe": "spicy-mango-shrimp-chopped-salad"
+    }
+  ]
+}

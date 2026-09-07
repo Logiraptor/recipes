@@ -1,0 +1,35 @@
+{
+  "weekStart": "2026-04-19",
+  "entries": [
+    {
+      "date": "2026-04-20",
+      "meal": "breakfast",
+      "recipe": "pancakes"
+    },
+    {
+      "date": "2026-04-20",
+      "meal": "dinner",
+      "recipe": "cajun-red-beans-rice"
+    },
+    {
+      "date": "2026-04-21",
+      "meal": "breakfast",
+      "recipe": "greek-yogurt-parfait-with-berries-and-granola"
+    },
+    {
+      "date": "2026-04-21",
+      "meal": "dinner",
+      "recipe": "vietnamese-pork-bowls"
+    },
+    {
+      "date": "2026-04-22",
+      "meal": "breakfast",
+      "recipe": "toddler-friendly-veggie-quiche"
+    },
+    {
+      "date": "2026-04-23",
+      "meal": "breakfast",
+      "recipe": "southern-buttermilk-biscuits"
+    }
+  ]
+}
