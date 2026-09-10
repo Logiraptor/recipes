@@ -1,9 +1,9 @@
 {
   "weekStart": "2026-09-06",
   "entries": [
-    { "date": "2026-09-07", "meal": "dinner", "recipe": "one-pot-cheddar-tomato-mac" },
-    { "date": "2026-09-08", "meal": "dinner", "recipe": "black-bean-and-corn-tacos" },
-    { "date": "2026-09-09", "meal": "dinner", "recipe": "cajun-chicken-and-rice-one-pot" },
+    { "date": "2026-09-07", "meal": "dinner", "title": "Deleted recipe", "notes": "Removed recipe: one-pot-cheddar-tomato-mac" },
+    { "date": "2026-09-08", "meal": "dinner", "title": "Deleted recipe", "notes": "Removed recipe: black-bean-and-corn-tacos" },
+    { "date": "2026-09-09", "meal": "dinner", "title": "Deleted recipe", "notes": "Removed recipe: cajun-chicken-and-rice-one-pot" },
     { "date": "2026-09-10", "meal": "dinner", "recipe": "classic-beef-and-bean-chili" },
     { "date": "2026-09-11", "meal": "dinner", "recipe": "sloppy-joes" }
   ]

@@ -1,9 +1,9 @@
 {
   "weekStart": "2025-06-01",
   "entries": [
-    { "date": "2025-06-01", "meal": "breakfast", "recipe": "banana-oat-pancakes-with-maple-syrup" },
+    { "date": "2025-06-01", "meal": "breakfast", "title": "Deleted recipe", "notes": "Removed recipe: banana-oat-pancakes-with-maple-syrup" },
     { "date": "2025-06-01", "meal": "dinner", "recipe": "instant-pot-butter-chicken", "servings": 6 },
-    { "date": "2025-06-02", "meal": "dinner", "recipe": "black-bean-and-corn-tacos" },
+    { "date": "2025-06-02", "meal": "dinner", "title": "Deleted recipe", "notes": "Removed recipe: black-bean-and-corn-tacos" },
     { "date": "2025-06-03", "meal": "dinner", "title": "Leftovers", "notes": "Clear out the fridge." }
   ]
 }

@@ -24,17 +24,17 @@
     {
       "date": "2026-06-10",
       "meal": "dinner",
-      "recipe": "creamy-tuna-pasta-with-peas"
+      "title": "Deleted recipe", "notes": "Removed recipe: creamy-tuna-pasta-with-peas"
     },
     {
       "date": "2026-06-11",
       "meal": "dinner",
-      "recipe": "spiced-lentils-with-carrots"
+      "title": "Deleted recipe", "notes": "Removed recipe: spiced-lentils-with-carrots"
     },
     {
       "date": "2026-06-12",
       "meal": "dinner",
-      "recipe": "black-bean-and-corn-tacos"
+      "title": "Deleted recipe", "notes": "Removed recipe: black-bean-and-corn-tacos"
     }
   ]
 }
