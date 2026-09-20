@@ -1,0 +1,24 @@
+{
+  "name": "5-Minute Creamy Coleslaw",
+  "description": "A quick creamy coleslaw made with bagged slaw mix and a simple tangy dressing.",
+  "prepTime": "PT5M",
+  "totalTime": "PT5M",
+  "recipeYield": "About 7 cups",
+  "recipeCategory": "Side",
+  "recipeCuisine": "American",
+  "recipeIngredient": [
+    "3/4 cup mayonnaise",
+    "1/4 cup apple cider vinegar",
+    "2 tablespoons white vinegar",
+    "1 teaspoon sugar",
+    "1 teaspoon kosher salt",
+    "1 teaspoon black pepper",
+    "1/2 teaspoon celery seeds",
+    "1 bag (16 ounces) coleslaw mix"
+  ],
+  "recipeInstructions": [
+    "Whisk together the mayonnaise, apple cider vinegar, white vinegar, sugar, salt, black pepper, and celery seeds to make the dressing.",
+    "Combine the dressing and coleslaw mix in a large bowl. Stir until all the vegetables are coated. Serve immediately or refrigerate until ready to eat."
+  ],
+  "source": "https://mandiofthemountains.com/5-minute-creamy-coleslaw-using-bagged-mix/"
+}
