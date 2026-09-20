@@ -1,0 +1,39 @@
+{
+  "name": "Chinese Shrimp Fried Rice",
+  "description": "An easy Chinese-style fried rice with shrimp, eggs, mixed vegetables, soy sauce, oyster sauce, and white pepper. Adapted from Rasa Malaysia.",
+  "recipeIngredient": [
+    "6 cups leftover steamed rice, chilled overnight",
+    "6 tablespoons oil",
+    "4 large eggs, lightly beaten",
+    "4 cloves garlic, minced",
+    "1 pound shrimp, shelled and deveined",
+    "2 cups frozen mixed vegetables, defrosted",
+    "2 tablespoons soy sauce",
+    "2 tablespoons oyster sauce",
+    "6 dashes ground white pepper (or black pepper)",
+    "Salt, to taste"
+  ],
+  "recipeInstructions": [
+    "Use the back of a spoon to gently break up any lumps in the chilled rice, then set it aside.",
+    "Heat 2 tablespoons of the oil in a wok or skillet over high heat. Add the eggs and use a spatula to break them into small pieces as they cook. Remove the cooked eggs and set them aside.",
+    "Heat the remaining oil in the wok or skillet over high heat. Add the garlic and stir-fry until aromatic or lightly browned.",
+    "Add the shrimp. When they begin to cook, add the mixed vegetables and stir quickly several times.",
+    "Add the rice and stir-fry continuously. Add the soy sauce, oyster sauce, and white pepper, then continue to stir-fry until the shrimp are fully cooked and the rice is lightly toasted.",
+    "Return the eggs to the wok and stir until thoroughly combined. Add salt to taste and serve immediately."
+  ],
+  "recipeYield": "4 servings",
+  "recipeCategory": "Dinner",
+  "recipeCuisine": "Chinese",
+  "totalTime": "PT20M",
+  "tool": [
+    "Wok or skillet"
+  ],
+  "keywords": [
+    "shrimp",
+    "fried rice",
+    "Chinese",
+    "weeknight",
+    "stir-fry"
+  ],
+  "source": "https://rasamalaysia.com/shrimp-fried-rice/"
+}
