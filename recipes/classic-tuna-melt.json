@@ -1,0 +1,31 @@
+{
+  "name": "Classic Tuna Melt",
+  "description": "A creamy, cheesy tuna melt with pickle, tomato, and red onion, grilled until golden brown.",
+  "recipeIngredient": [
+    "1/4 cup mayonnaise, plus more for the bread",
+    "1/2 tablespoon fresh lemon juice",
+    "1/2 tablespoon Dijon mustard",
+    "Kosher salt and pepper",
+    "2 (5-ounce) cans solid white tuna in water, drained",
+    "1 small pickle, chopped",
+    "8 slices white bread",
+    "8 thin slices orange Cheddar cheese",
+    "1 large tomato, sliced",
+    "1/2 small red onion, thinly sliced"
+  ],
+  "recipeInstructions": [
+    "In a bowl, whisk together the mayonnaise, lemon juice, Dijon mustard, and 1/4 teaspoon each salt and pepper. Add the tuna and mix to combine, then fold in the pickle.",
+    "Heat a large nonstick skillet over medium heat. Lightly spread one side of each bread slice with mayonnaise and place mayonnaise-side down on a work surface. Top 4 slices with one slice of Cheddar, then the tuna mixture, tomato, red onion, and a second slice of Cheddar. Add the remaining bread slices, mayonnaise-side up. Cook until golden brown, 2 to 3 minutes per side."
+  ],
+  "recipeYield": "4 servings",
+  "recipeCategory": "Lunch",
+  "nutrition": {
+    "calories": "473 calories",
+    "proteinContent": "27 grams",
+    "fatContent": "28 grams",
+    "carbohydrateContent": "24 grams",
+    "fiberContent": "2 grams",
+    "sodiumContent": "931 milligrams"
+  },
+  "source": "https://www.goodhousekeeping.com/food-recipes/a41913924/classic-tuna-melt-recipe/"
+}

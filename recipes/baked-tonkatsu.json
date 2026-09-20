@@ -1,0 +1,36 @@
+{
+  "name": "Baked Tonkatsu",
+  "description": "Crispy Japanese-inspired pork cutlets with homemade sweet and tangy tonkatsu sauce and a cabbage slaw.",
+  "recipeIngredient": [
+    "2 cups panko",
+    "4 tablespoons olive oil, divided",
+    "2 large eggs",
+    "Kosher salt",
+    "1 pound pork tenderloin, trimmed and cut crosswise into 8 pieces",
+    "1/2 cup ketchup",
+    "1/4 cup Worcestershire sauce",
+    "1 tablespoon reduced-sodium soy sauce",
+    "1 tablespoon plus 1 teaspoon apple cider vinegar, divided",
+    "1/4 teaspoon honey",
+    "1/4 small green cabbage (about 12 ounces), cored and shredded",
+    "1/4 small red cabbage (about 9 ounces), cored and shredded"
+  ],
+  "recipeInstructions": [
+    "Heat the oven to 450°F. Set a wire rack in a rimmed baking sheet.",
+    "On a separate rimmed baking sheet, toss the panko with 3 tablespoons of the oil. Bake until golden brown, 3 to 4 minutes, then transfer to a shallow bowl. Beat the eggs in a second shallow bowl.",
+    "Pound each piece of pork to 1/4-inch thick and season with 1/4 teaspoon salt. Dip one piece at a time in the egg, letting the excess drip off, then coat it in the panko and press gently to help the crumbs adhere. Transfer the pork to the prepared rack. Roast until golden brown and cooked through, 10 to 12 minutes.",
+    "Meanwhile, combine the ketchup, Worcestershire sauce, soy sauce, and 1 teaspoon of the vinegar in a medium bowl.",
+    "In a large bowl, whisk the honey with the remaining tablespoon each of vinegar and oil. Add both cabbages and toss to combine. Serve the crispy pork with the tonkatsu sauce and cabbage slaw."
+  ],
+  "recipeCategory": "Dinner",
+  "recipeCuisine": "Japanese-inspired",
+  "nutrition": {
+    "calories": "510 calories",
+    "proteinContent": "32 grams",
+    "fatContent": "19.5 grams",
+    "carbohydrateContent": "51 grams",
+    "fiberContent": "4 grams",
+    "sodiumContent": "915 milligrams"
+  },
+  "source": "https://www.goodhousekeeping.com/food-recipes/a43455536/baked-tonkatsu-recipe/"
+}
