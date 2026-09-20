@@ -38,5 +38,6 @@
   "tool": [
     "skillet"
   ],
-  "totalTime": "PT30M"
+  "totalTime": "PT30M",
+  "image": "/images/fish-tacos-with-cumin-lime-slaw.jpg"
 }

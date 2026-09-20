@@ -42,5 +42,6 @@
   "tool": [
     "10-inch skillet"
   ],
-  "totalTime": "PT35M"
+  "totalTime": "PT35M",
+  "image": "/images/sloppy-joes.jpg"
 }
