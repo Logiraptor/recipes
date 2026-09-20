@@ -1,10 +1,14 @@
 {
   "weekStart": "2026-09-20",
   "entries": [
+    { "date": "2026-09-21", "meal": "breakfast", "recipe": "pancakes" },
     { "date": "2026-09-21", "meal": "dinner", "recipe": "chinese-shrimp-fried-rice" },
+    { "date": "2026-09-22", "meal": "breakfast", "recipe": "smoked-salmon-spinach-scramble" },
     { "date": "2026-09-22", "meal": "dinner", "recipe": "baked-tonkatsu" },
+    { "date": "2026-09-23", "meal": "breakfast", "recipe": "egg-and-honey-toast" },
     { "date": "2026-09-23", "meal": "dinner", "recipe": "classic-tuna-melt" },
     { "date": "2026-09-23", "meal": "side", "recipe": "five-minute-creamy-coleslaw", "notes": "Use the cabbage bought for the baked tonkatsu instead of buying a separate bag of coleslaw mix; add carrots if desired." },
+    { "date": "2026-09-24", "meal": "breakfast", "recipe": "greek-yogurt-parfait-with-berries-and-granola" },
     { "date": "2026-09-24", "meal": "dinner", "recipe": "classic-beef-and-bean-chili" }
   ]
 }
