@@ -20,6 +20,9 @@ package schema
 	// One or two sentences describing the dish.
 	description?: string & !=""
 
+	// One locally hosted picture path, e.g. "/images/recipe-slug.jpg".
+	image?: string & =~"^/images/[a-z0-9]+(-[a-z0-9]+)*\\.(jpg|jpeg|png|webp)$"
+
 	// Free-form list, one ingredient per line, quantity first.
 	// e.g. "2 tablespoons olive oil"
 	recipeIngredient!: [...string & !=""] & [_, ...]

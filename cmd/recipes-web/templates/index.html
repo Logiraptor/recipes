@@ -38,7 +38,8 @@
   {{range .Recipes}}
   <li class="h-full">
     <a href="/recipes/{{.Slug}}"
-       class="card h-full bg-base-100 shadow-sm transition hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+       class="card h-full overflow-hidden bg-base-100 shadow-sm transition hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary">
+      {{with .Image}}<figure><img src="{{.}}" alt="" loading="lazy" class="h-48 w-full object-cover"></figure>{{end}}
       <div class="card-body gap-2 p-5">
         <h2 class="text-base font-semibold leading-snug">{{.Name}}</h2>
         <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-base-content/60">

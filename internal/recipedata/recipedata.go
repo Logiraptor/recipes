@@ -18,6 +18,7 @@ type Recipe struct {
 
 	Name               string   `json:"name"`
 	Description        string   `json:"description,omitempty"`
+	Image              string   `json:"image,omitempty"`
 	RecipeIngredient   []string `json:"recipeIngredient"`
 	RecipeInstructions []string `json:"recipeInstructions"`
 	RecipeYield        string   `json:"recipeYield,omitempty"`

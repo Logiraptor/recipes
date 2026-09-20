@@ -19,6 +19,11 @@ for f in recipes/*.json; do
 		echo "bad slug (filename): $f" >&2
 		fail=1
 	fi
+	image=$(jq -r '.image // empty' "$f")
+	if [ -n "$image" ] && [ ! -f ".${image}" ]; then
+		echo "$f: image does not exist: $image" >&2
+		fail=1
+	fi
 done
 
 for f in meal-plans/*.json; do

@@ -11,6 +11,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strconv"
@@ -66,6 +67,7 @@ func main() {
 	srv := &server{store: store}
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /", srv.index)
+	mux.Handle("GET /images/", http.StripPrefix("/images/", http.FileServer(http.Dir(filepath.Join(store.Root, "images")))))
 	mux.HandleFunc("GET /recipes/{slug}", srv.recipe)
 	mux.HandleFunc("GET /plan", srv.plan)
 	mux.HandleFunc("GET /healthz", func(w http.ResponseWriter, _ *http.Request) {
